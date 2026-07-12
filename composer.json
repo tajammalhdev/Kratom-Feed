@@ -1,0 +1,22 @@
+﻿{
+	"name": "kratom-feed/theme",
+	"description": "Kratom Feed WordPress Theme â€” editorial blog with Tailwind CSS and Carbon Fields",
+	"type": "wordpress-theme",
+	"license": "GPL-2.0-or-later",
+	"require": {
+		"php": ">=8.0",
+		"htmlburger/carbon-fields": "^3.6",
+		"htmlburger/carbon-video": "^1.0",
+		"htmlburger/carbon-common": "^1.3",
+		"htmlburger/carbon-pagination": "^1.1"
+	},
+	"autoload": {
+		"psr-4": {
+			"KratomFeeds\\": "inc/"
+		}
+	},
+	"require-dev": {
+		"htmlburger/carbon-debug": "^1.0"
+	}
+}
+
