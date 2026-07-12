@@ -1,6 +1,6 @@
 ﻿<?php
 /**
- * Builder: Hero Featured (magazine layout)
+ * Builder: Hero Featured (magazine layouts)
  *
  * @package KratomFeeds
  * @var array $section_data
