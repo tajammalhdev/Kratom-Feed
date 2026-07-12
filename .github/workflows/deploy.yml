@@ -42,7 +42,11 @@ jobs:
             exit 1
           fi
 
+          # FTP-Deploy-Action requires server-dir to end with /
+          normalized_dir="${FTP_SERVER_DIR%/}/"
+          echo "FTP_SERVER_DIR=$normalized_dir" >> "$GITHUB_ENV"
           echo "All 4 FTP secrets are present."
+          echo "Using FTP server directory: $normalized_dir"
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -56,7 +60,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
 
       - name: Build theme assets
         run: |
@@ -69,7 +73,7 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          server-dir: ${{ env.FTP_SERVER_DIR }}
           exclude: |
             **/.git*
             **/.github/**
