@@ -2,7 +2,7 @@
   "name": "kratom-feed-theme",
   "version": "1.0.0",
   "private": true,
-  "description": "Kratom Feed WordPress theme — Tailwind CSS build",
+  "description": "Kratom Feed WordPress theme â€” Tailwind CSS build",
   "scripts": {
     "build:css": "npx @tailwindcss/cli -i ./assets/src/css/input.css -o ./assets/css/tailwind.css --minify",
     "watch:css": "npx @tailwindcss/cli -i ./assets/src/css/input.css -o ./assets/css/tailwind.css --watch",
