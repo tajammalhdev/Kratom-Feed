@@ -15,22 +15,34 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Validate FTP secrets
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_SERVER_DIR: ${{ secrets.FTP_SERVER_DIR }}
         run: |
           missing=()
-          [ -z "${{ secrets.FTP_SERVER }}" ] && missing+=("FTP_SERVER")
-          [ -z "${{ secrets.FTP_USERNAME }}" ] && missing+=("FTP_USERNAME")
-          [ -z "${{ secrets.FTP_PASSWORD }}" ] && missing+=("FTP_PASSWORD")
-          [ -z "${{ secrets.FTP_SERVER_DIR }}" ] && missing+=("FTP_SERVER_DIR")
+          [ -z "$FTP_SERVER" ] && missing+=("FTP_SERVER")
+          [ -z "$FTP_USERNAME" ] && missing+=("FTP_USERNAME")
+          [ -z "$FTP_PASSWORD" ] && missing+=("FTP_PASSWORD")
+          [ -z "$FTP_SERVER_DIR" ] && missing+=("FTP_SERVER_DIR")
 
           if [ ${#missing[@]} -gt 0 ]; then
-            echo "::error::Missing required GitHub repository secrets: ${missing[*]}"
-            echo "Add them under Settings -> Secrets and variables -> Actions."
-            echo "FTP_SERVER: your hosting FTP hostname (for example ftp.example.com)"
-            echo "FTP_USERNAME: your FTP username"
-            echo "FTP_PASSWORD: your FTP password"
-            echo "FTP_SERVER_DIR: remote theme directory (for example /public_html/wp-content/themes/kratom-feed/)"
+            echo "::error::Missing required repository secrets: ${missing[*]}"
+            echo ""
+            echo "Create each one separately here:"
+            echo "https://github.com/tajammalhdev/Kratom-Feed/settings/secrets/actions"
+            echo ""
+            echo "Use the Repository secrets tab (not Environment secrets, not Variables)."
+            echo "Secret names must match exactly:"
+            echo "  FTP_SERVER"
+            echo "  FTP_USERNAME"
+            echo "  FTP_PASSWORD"
+            echo "  FTP_SERVER_DIR"
             exit 1
           fi
+
+          echo "All 4 FTP secrets are present."
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
