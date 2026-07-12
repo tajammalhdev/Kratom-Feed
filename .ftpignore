@@ -1,7 +1,14 @@
 .git/
 .github/
 node_modules/
-src/
+assets/src/
 .vscode/
 .env
 README.md
+package.json
+package-lock.json
+composer.json
+composer.lock
+gitignore.txt
+.gitignore
+.ftpignore

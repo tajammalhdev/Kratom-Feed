@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -13,6 +14,43 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Validate FTP secrets
+        run: |
+          missing=()
+          [ -z "${{ secrets.FTP_SERVER }}" ] && missing+=("FTP_SERVER")
+          [ -z "${{ secrets.FTP_USERNAME }}" ] && missing+=("FTP_USERNAME")
+          [ -z "${{ secrets.FTP_PASSWORD }}" ] && missing+=("FTP_PASSWORD")
+          [ -z "${{ secrets.FTP_SERVER_DIR }}" ] && missing+=("FTP_SERVER_DIR")
+
+          if [ ${#missing[@]} -gt 0 ]; then
+            echo "::error::Missing required GitHub repository secrets: ${missing[*]}"
+            echo "Add them under Settings -> Secrets and variables -> Actions."
+            echo "FTP_SERVER: your hosting FTP hostname (for example ftp.example.com)"
+            echo "FTP_USERNAME: your FTP username"
+            echo "FTP_PASSWORD: your FTP password"
+            echo "FTP_SERVER_DIR: remote theme directory (for example /public_html/wp-content/themes/kratom-feed/)"
+            exit 1
+          fi
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          tools: composer:v2
+
+      - name: Install PHP dependencies
+        run: composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Build theme assets
+        run: |
+          npm install
+          npm run build:css
+
       - name: Upload Theme
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -20,3 +58,18 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          exclude: |
+            **/.git*
+            **/.github/**
+            **/node_modules/**
+            **/assets/src/**
+            **/.vscode/**
+            **/.env
+            **/README.md
+            **/package.json
+            **/package-lock.json
+            **/composer.json
+            **/composer.lock
+            **/gitignore.txt
+            **/.gitignore
+            **/.ftpignore
