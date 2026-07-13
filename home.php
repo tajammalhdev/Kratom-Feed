@@ -1,6 +1,6 @@
-﻿<?php
+<?php
 /**
- * Blog home — debug stub.
+ * Blog home - debug stub.
  *
  * @package KratomFeeds
  */

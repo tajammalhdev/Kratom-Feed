@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Site footer
  *
@@ -6,7 +6,7 @@
  */
 
 $tagline     = kratom_feed_get_option( 'footer_tagline' );
-$copyright   = kratom_feed_get_option( 'copyright_text', 'Â© ' . gmdate( 'Y' ) . ' ' . get_bloginfo( 'name' ) );
+$copyright   = kratom_feed_get_option( 'copyright_text', '(c) ' . gmdate( 'Y' ) . ' ' . get_bloginfo( 'name' ) );
 $disclaimer  = kratom_feed_get_option( 'footer_disclaimer' );
 $show_chat   = kratom_feed_get_option( 'floating_chat_enabled', true );
 $about_url   = get_permalink( get_page_by_path( 'about' ) ) ?: home_url( '/about/' );

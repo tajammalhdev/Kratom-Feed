@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Builder: Blog Posts
  *
@@ -63,8 +63,8 @@ $grid_class = 'horizontal' === $layout
 						</div>
 						<div class="p-4">
 							<h3 class="line-clamp-2 text-sm font-semibold text-gray-900 group-hover:text-pg-green-dark"><?php the_title(); ?></h3>
-							<p class="mt-2 text-xs text-gray-500"><?php echo esc_html( kratom_feed_reading_time() . ' Â· ' . get_the_date() ); ?></p>
-							<span class="mt-2 inline-block text-xs font-bold uppercase text-pg-green-dark"><?php esc_html_e( 'Read article â†’', 'kratom-feed' ); ?></span>
+							<p class="mt-2 text-xs text-gray-500"><?php echo esc_html( kratom_feed_reading_time() . ' | ' . get_the_date() ); ?></p>
+							<span class="mt-2 inline-block text-xs font-bold uppercase text-pg-green-dark"><?php esc_html_e( 'Read article ->', 'kratom-feed' ); ?></span>
 						</div>
 					</a>
 				</article>

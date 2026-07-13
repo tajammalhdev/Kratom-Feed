@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Builder: Hero Featured (magazine layouts)
  *
@@ -79,7 +79,7 @@ $grid_q = new WP_Query( $grid_args );
 					</h2>
 					<?php if ( has_excerpt( $featured ) || $featured->post_content ) : ?>
 						<p class="mt-3 text-sm leading-relaxed text-gray-500">
-							<?php echo esc_html( wp_trim_words( get_the_excerpt( $featured ), 28, '…' ) ); ?>
+							<?php echo esc_html( wp_trim_words( get_the_excerpt( $featured ), 28, '...' ) ); ?>
 						</p>
 					<?php endif; ?>
 				</a>

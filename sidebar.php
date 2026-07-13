@@ -1,6 +1,6 @@
-﻿<?php
+<?php
 /**
- * Sidebar — debug stub (empty).
+ * Sidebar - debug stub (empty).
  *
  * @package KratomFeeds
  */

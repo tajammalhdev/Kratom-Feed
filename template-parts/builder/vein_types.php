@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Builder: Vein Types
  *
@@ -28,7 +28,7 @@ if ( empty( $cards ) ) {
 					<?php if ( ! empty( $card['description'] ) ) : ?>
 						<p class="mt-3 text-sm leading-relaxed text-gray-600"><?php echo esc_html( $card['description'] ); ?></p>
 					<?php endif; ?>
-					<span class="mt-4 inline-block text-sm font-bold uppercase text-pg-green-dark group-hover:underline"><?php esc_html_e( 'Learn more â†’', 'kratom-feed' ); ?></span>
+					<span class="mt-4 inline-block text-sm font-bold uppercase text-pg-green-dark group-hover:underline"><?php esc_html_e( 'Learn more ->', 'kratom-feed' ); ?></span>
 				</div>
 			</a>
 			<?php endforeach; ?>

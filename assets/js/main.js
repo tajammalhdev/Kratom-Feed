@@ -1,5 +1,5 @@
-﻿/**
- * Kratom Feed â€” Pacific Grass-style interactions
+/**
+ * Kratom Feed - Pacific Grass-style interactions
  */
 (function () {
   "use strict";

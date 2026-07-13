@@ -1,6 +1,6 @@
-﻿<?php
+<?php
 /**
- * Single — debug stub.
+ * Single - debug stub.
  *
  * @package KratomFeeds
  */

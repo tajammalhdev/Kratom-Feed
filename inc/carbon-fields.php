@@ -1,6 +1,6 @@
-﻿<?php
+<?php
 /**
- * Carbon Fields â€” Theme Options & Page Builder
+ * Carbon Fields - Theme Options & Page Builder
  *
  * @package KratomFeeds
  */
@@ -19,7 +19,7 @@ add_action( 'carbon_fields_register_fields', 'kratom_feed_setup_carbon_fields' )
  */
 function kratom_feed_setup_carbon_fields() {
 
-	// â”€â”€â”€ Theme Options â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+	// --- Theme Options -----------------------------------------------
 	Container::make( 'theme_options', __( 'Theme Options', 'kratom-feed' ) )
 		->set_page_parent( 'themes.php' )
 		->add_tab( __( 'Global', 'kratom-feed' ), array(
@@ -52,9 +52,9 @@ function kratom_feed_setup_carbon_fields() {
 		) )
 		->add_tab( __( 'Footer', 'kratom-feed' ), array(
 			Field::make( 'textarea', 'footer_tagline', __( 'Footer Tagline', 'kratom-feed' ) )
-				->set_default_value( 'Premium Kratom education â€” expert guides, strain reviews, and research summaries.' ),
+				->set_default_value( 'Premium Kratom education - expert guides, strain reviews, and research summaries.' ),
 			Field::make( 'text', 'copyright_text', __( 'Copyright Text', 'kratom-feed' ) )
-				->set_default_value( 'Â© ' . gmdate( 'Y' ) . ' Kratom Feed. All rights reserved.' ),
+				->set_default_value( '(c) ' . gmdate( 'Y' ) . ' Kratom Feed. All rights reserved.' ),
 			Field::make( 'rich_text', 'footer_disclaimer', __( 'Disclaimer', 'kratom-feed' ) )
 				->set_default_value( '<strong>Disclaimer:</strong> Kratom Feed provides educational content for informational purposes only. Not medical advice.' ),
 			Field::make( 'checkbox', 'floating_chat_enabled', __( 'Show Floating Chat Button', 'kratom-feed' ) )
@@ -75,7 +75,7 @@ function kratom_feed_setup_carbon_fields() {
 				->set_default_value( true ),
 		) );
 
-	// â”€â”€â”€ Page Builder (Pages + Block Snippets) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+	// --- Page Builder (Pages + Block Snippets) -----------------------
 	Container::make( 'post_meta', __( 'Page Builder', 'kratom-feed' ) )
 		->where( 'post_type', 'IN', array( 'page', 'lumen_block_snippet' ) )
 		->add_fields( array(

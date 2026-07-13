@@ -1,6 +1,6 @@
-﻿<?php
+<?php
 /**
- * Main template — debug stub (no builder / template-parts).
+ * Main template - debug stub (no builder / template-parts).
  *
  * @package KratomFeeds
  */

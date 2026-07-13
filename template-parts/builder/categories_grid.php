@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Builder: Categories Grid
  *

@@ -1,6 +1,6 @@
-﻿<?php
+<?php
 /**
- * Front page — debug stub (no builder rendering).
+ * Front page - debug stub (no builder rendering).
  *
  * @package KratomFeeds
  */

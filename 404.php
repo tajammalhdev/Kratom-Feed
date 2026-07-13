@@ -1,6 +1,6 @@
 <?php
 /**
- * 404 — debug stub.
+ * 404 - debug stub.
  *
  * @package KratomFeeds
  */

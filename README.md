@@ -1,4 +1,4 @@
-﻿# Kratom Feed â€” WordPress Theme
+# Kratom Feed - WordPress Theme
 
 Pacific Grass-inspired Kratom editorial blog theme with **Carbon Fields Page Builder** and **Tailwind CSS v4**.
 
@@ -26,17 +26,17 @@ npm install
 npm run build:css
 ```
 
-4. Activate **Kratom Feed** in WordPress admin â†’ Appearance â†’ Themes
+4. Activate **Kratom Feed** in WordPress admin -> Appearance -> Themes
 
 ## Theme Options
 
-**Appearance â†’ Theme Options** (Carbon Fields):
+**Appearance -> Theme Options** (Carbon Fields):
 
-- **Global** â€” colors, Google rating
-- **Header** â€” logo text, search, utility buttons
-- **Footer** â€” tagline, copyright, disclaimer
-- **Newsletter** â€” default signup copy
-- **Blog** â€” archive title, reading time toggle
+- **Global** - colors, Google rating
+- **Header** - logo text, search, utility buttons
+- **Footer** - tagline, copyright, disclaimer
+- **Newsletter** - default signup copy
+- **Blog** - archive title, reading time toggle
 
 ## Page Builder (Element Builder)
 
@@ -47,7 +47,7 @@ Edit any **Page** or **Block Snippet** and enable **Use Page Builder**.
 | Section | Description |
 |---------|-------------|
 | Hero Featured | Magazine-style hero with featured post + 6-post grid |
-| Trust & Reviews | â€œBest Place to buyâ€¦â€ + Google rating + review carousel |
+| Trust & Reviews | "Best Place to buy..." + Google rating + review carousel |
 | Categories Grid | Main Categories with Shop All button |
 | Blog Posts | Editor's picks / latest articles grid or horizontal scroll |
 | Newsletter Signup | PG-style promo signup block |
@@ -68,7 +68,7 @@ Create reusable sections under **Block Snippets** in the admin menu. Embed anywh
 ## Homepage setup
 
 1. Create a page titled **Home**
-2. Set **Settings â†’ Reading â†’ Your homepage displays â†’ A static page â†’ Home**
+2. Set **Settings -> Reading -> Your homepage displays -> A static page -> Home**
 3. Either leave Page Builder off (uses built-in demo sections) or enable it and add sections manually
 
 ## Development
@@ -81,23 +81,23 @@ npm run watch:css   # Tailwind watch mode
 
 ```
 kratom-feed/
-â”œâ”€â”€ style.css                 # Theme header
-â”œâ”€â”€ functions.php             # Bootstrap
-â”œâ”€â”€ composer.json             # Carbon Fields packages
-â”œâ”€â”€ inc/
-â”‚   â”œâ”€â”€ carbon-fields.php     # Theme options + page builder fields
-â”‚   â”œâ”€â”€ template-functions.php
-â”‚   â”œâ”€â”€ builder-functions.php
-â”‚   â”œâ”€â”€ post-types.php        # lumen_block_snippet CPT
-â”‚   â””â”€â”€ shortcodes.php
-â”œâ”€â”€ template-parts/
-â”‚   â”œâ”€â”€ header/site-header.php
-â”‚   â”œâ”€â”€ footer/site-footer.php
-â”‚   â”œâ”€â”€ builder/              # One PHP file per section type
-â”‚   â””â”€â”€ home/default-sections.php
-â””â”€â”€ assets/
-    â”œâ”€â”€ src/css/input.css     # Tailwind source
-    â”œâ”€â”€ css/tailwind.css      # Compiled output
-    â””â”€â”€ js/main.js
+|-- style.css                 # Theme header
+|-- functions.php             # Bootstrap
+|-- composer.json             # Carbon Fields packages
+|-- inc/
+|   |-- carbon-fields.php     # Theme options + page builder fields
+|   |-- template-functions.php
+|   |-- builder-functions.php
+|   |-- post-types.php        # lumen_block_snippet CPT
+|   |-- shortcodes.php
+|-- template-parts/
+|   |-- header/site-header.php
+|   |-- footer/site-footer.php
+|   |-- builder/              # One PHP file per section type
+|   |-- home/default-sections.php
+|-- assets/
+    |-- src/css/input.css     # Tailwind source
+    |-- css/tailwind.css      # Compiled output
+    |-- js/main.js
 ```
 

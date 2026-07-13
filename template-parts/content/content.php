@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Blog card
  *
@@ -27,12 +27,12 @@
 			<p class="mt-2 text-xs text-gray-500">
 				<?php
 				if ( kratom_feed_get_option( 'show_reading_time', true ) ) {
-					echo esc_html( kratom_feed_reading_time() ) . ' Â· ';
+					echo esc_html( kratom_feed_reading_time() ) . ' | ';
 				}
 				echo esc_html( get_the_date() );
 				?>
 			</p>
-			<span class="mt-3 inline-block text-xs font-bold uppercase tracking-wider text-pg-green-dark group-hover:underline"><?php esc_html_e( 'Read article â†’', 'kratom-feed' ); ?></span>
+			<span class="mt-3 inline-block text-xs font-bold uppercase tracking-wider text-pg-green-dark group-hover:underline"><?php esc_html_e( 'Read article ->', 'kratom-feed' ); ?></span>
 		</div>
 	</a>
 </article>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Archive — debug stub.
+ * Archive - debug stub.
  *
  * @package KratomFeeds
  */

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Builder helper functions
  *

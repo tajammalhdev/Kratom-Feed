@@ -1,6 +1,6 @@
 <?php
 /**
- * Footer — debug stub (no template-parts).
+ * Footer - debug stub (no template-parts).
  *
  * @package KratomFeeds
  */

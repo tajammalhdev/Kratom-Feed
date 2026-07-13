@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Default homepage sections (static demo fallback)
  *
@@ -18,7 +18,7 @@ $sections = array(
 		'reviews'           => array(
 			array( 'name' => 'Russell Harry', 'text' => "Kratom Feed is my go-to for Kratom education. Clear guides, no sales pressure, and always up to date.", 'date' => 'Jun 19, 2026' ),
 			array( 'name' => 'Trina McCavour', 'text' => "I'm new to Kratom and love the consistency of the guides. Everything is easy to understand.", 'date' => 'Jun 14, 2026' ),
-			array( 'name' => 'James P.', 'text' => 'What an amazing editorial team â€” never have any issue finding what I need.', 'date' => 'Jun 10, 2026' ),
+			array( 'name' => 'James P.', 'text' => 'What an amazing editorial team - never have any issue finding what I need.', 'date' => 'Jun 10, 2026' ),
 		),
 	),
 	array(
@@ -43,7 +43,7 @@ $sections = array(
 		'_type'       => 'newsletter_signup',
 		'description' => 'Subscribe today and instantly get our complete Beginner\'s Guide PDF added to your inbox.',
 		'bullets'     => array(
-			array( 'text' => '100% Free â€” no spam, unsubscribe anytime.' ),
+			array( 'text' => '100% Free - no spam, unsubscribe anytime.' ),
 			array( 'text' => 'Weekly digest of new guides and research.' ),
 			array( 'text' => 'Expert-reviewed content you can trust.' ),
 		),

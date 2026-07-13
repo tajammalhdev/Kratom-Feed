@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Builder: Newsletter Signup
  *
@@ -22,7 +22,7 @@ $fine     = $section_data['fine_print'] ?? '';
 			<ul class="mt-6 space-y-2 text-sm text-gray-700 list-none m-0 p-0">
 				<?php foreach ( $bullets as $bullet ) : ?>
 					<?php if ( ! empty( $bullet['text'] ) ) : ?>
-						<li>âœ“ <?php echo esc_html( $bullet['text'] ); ?></li>
+						<li>- <?php echo esc_html( $bullet['text'] ); ?></li>
 					<?php endif; ?>
 				<?php endforeach; ?>
 			</ul>

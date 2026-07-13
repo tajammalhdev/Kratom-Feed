@@ -1,6 +1,6 @@
-﻿<?php
+<?php
 /**
- * Search — debug stub.
+ * Search - debug stub.
  *
  * @package KratomFeeds
  */

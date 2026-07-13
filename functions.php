@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Kratom Feed Theme Functions
  *
@@ -34,7 +34,7 @@ function kratom_feed_load_carbon_fields() {
 	require_once KRATOM_FEED_DIR . '/vendor/autoload.php';
 	\Carbon_Fields\Carbon_Fields::boot();
 }
-add_action( 'after_setup_theme', 'kratom_feed_load_carbon_fields', 5 );
+// add_action( 'after_setup_theme', 'kratom_feed_load_carbon_fields', 5 );
 
 require_once KRATOM_FEED_DIR . '/inc/post-types.php';
 

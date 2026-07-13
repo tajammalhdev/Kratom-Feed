@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Builder: Trust & Reviews
  *
@@ -74,8 +74,8 @@ if ( empty( $reviews ) ) {
 			</div>
 			<?php if ( count( $reviews ) > 1 ) : ?>
 			<div class="mt-6 flex justify-center gap-2">
-				<button type="button" class="review-prev flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 text-neutral-500 transition-colors hover:bg-neutral-100 cursor-pointer" aria-label="<?php esc_attr_e( 'Previous review', 'kratom-feed' ); ?>">â€¹</button>
-				<button type="button" class="review-next flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 text-neutral-500 transition-colors hover:bg-neutral-100 cursor-pointer" aria-label="<?php esc_attr_e( 'Next review', 'kratom-feed' ); ?>">â€º</button>
+				<button type="button" class="review-prev flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 text-neutral-500 transition-colors hover:bg-neutral-100 cursor-pointer" aria-label="<?php esc_attr_e( 'Previous review', 'kratom-feed' ); ?>"><</button>
+				<button type="button" class="review-next flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 text-neutral-500 transition-colors hover:bg-neutral-100 cursor-pointer" aria-label="<?php esc_attr_e( 'Next review', 'kratom-feed' ); ?>">></button>
 			</div>
 			<?php endif; ?>
 		</div>

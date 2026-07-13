@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Builder: Block Snippet embed
  *
