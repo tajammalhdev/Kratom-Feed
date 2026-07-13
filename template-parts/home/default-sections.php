@@ -13,6 +13,11 @@ $sections = array(
 		'grid_count'  => '6',
 	),
 	array(
+		'_type'           => 'featured_mosaic',
+		'show_engagement' => true,
+		'show_play_badge' => true,
+	),
+	array(
 		'_type'             => 'trust_reviews',
 		'subtitle'          => "Canada's most trusted Kratom education blog with thousands of 5-star reader reviews and industry-leading editorial standards.",
 		'reviews'           => array(

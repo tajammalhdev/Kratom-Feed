@@ -111,6 +111,26 @@ function kratom_feed_setup_carbon_fields() {
 						->set_help_text( __( 'Number of posts in the right-hand grid (default 6).', 'kratom-feed' ) ),
 				) )
 
+				// Featured Mosaic (Ncmaz-style)
+				->add_fields( 'featured_mosaic', __( 'Featured Mosaic', 'kratom-feed' ), array(
+					Field::make( 'association', 'posts', __( 'Posts', 'kratom-feed' ) )
+						->set_types( array(
+							array(
+								'type'      => 'post',
+								'post_type' => 'post',
+							),
+						) )
+						->set_max( 4 )
+						->set_help_text( __( 'Pick up to 4 posts. Order: top-left, top-middle, bottom-wide, right-tall. Leave empty to use the latest 4 posts.', 'kratom-feed' ) ),
+					Field::make( 'select', 'category', __( 'Category Filter', 'kratom-feed' ) )
+						->set_options( 'kratom_feed_get_blog_categories' )
+						->set_help_text( __( 'Used when posts are not manually selected.', 'kratom-feed' ) ),
+					Field::make( 'checkbox', 'show_engagement', __( 'Show likes & comments on tall card', 'kratom-feed' ) )
+						->set_default_value( true ),
+					Field::make( 'checkbox', 'show_play_badge', __( 'Show play badge on left cards', 'kratom-feed' ) )
+						->set_default_value( true ),
+				) )
+
 				// Trust + Reviews
 				->add_fields( 'trust_reviews', __( 'Trust & Reviews', 'kratom-feed' ), array(
 					Field::make( 'text', 'heading_before', __( 'Heading (before highlight)', 'kratom-feed' ) )

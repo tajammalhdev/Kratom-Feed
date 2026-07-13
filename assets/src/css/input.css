@@ -105,6 +105,10 @@
     @apply flex h-full flex-col gap-6 rounded-lg border border-neutral-200 bg-white p-6;
   }
 
+  .pg-mosaic-card {
+    @apply isolate shadow-sm;
+  }
+
   .pg-prose {
     @apply prose prose-lg max-w-none prose-headings:font-bold prose-headings:uppercase prose-headings:tracking-wide prose-a:text-pg-green-dark hover:prose-a:text-pg-green;
   }

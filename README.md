@@ -47,6 +47,7 @@ Edit any **Page** or **Block Snippet** and enable **Use Page Builder**.
 | Section | Description |
 |---------|-------------|
 | Hero Featured | Magazine-style hero with featured post + 6-post grid |
+| Featured Mosaic | Ncmaz-style 4-card mosaic (2 small + wide + tall) |
 | Trust & Reviews | "Best Place to buy..." + Google rating + review carousel |
 | Categories Grid | Main Categories with Shop All button |
 | Blog Posts | Editor's picks / latest articles grid or horizontal scroll |

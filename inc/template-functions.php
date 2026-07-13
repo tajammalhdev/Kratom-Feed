@@ -105,6 +105,82 @@ function kratom_feed_get_post_primary_category( $post_id = null ) {
 }
 
 /**
+ * Format a number for compact display (e.g. 4200 -> 4.2k).
+ */
+function kratom_feed_compact_number( $number ) {
+	$number = absint( $number );
+	if ( $number >= 1000000 ) {
+		return rtrim( rtrim( number_format( $number / 1000000, 1 ), '0' ), '.' ) . 'm';
+	}
+	if ( $number >= 1000 ) {
+		return rtrim( rtrim( number_format( $number / 1000, 1 ), '0' ), '.' ) . 'k';
+	}
+	return (string) $number;
+}
+
+/**
+ * Category badge text color class for mosaic cards.
+ */
+function kratom_feed_category_badge_class( $label = '' ) {
+	$palette = array(
+		'text-orange-500',
+		'text-rose-500',
+		'text-emerald-500',
+		'text-teal-700',
+		'text-sky-600',
+		'text-violet-600',
+		'text-amber-600',
+	);
+	$index = $label ? ( abs( crc32( strtolower( $label ) ) ) % count( $palette ) ) : 0;
+	return $palette[ $index ];
+}
+
+/**
+ * Resolve association field items or query latest posts.
+ *
+ * @param array  $association Carbon association value.
+ * @param int    $count       Max posts.
+ * @param string $category    Optional category ID.
+ * @return WP_Post[]
+ */
+function kratom_feed_resolve_posts( $association, $count = 4, $category = '' ) {
+	$ids = array();
+	if ( ! empty( $association ) && is_array( $association ) ) {
+		foreach ( $association as $item ) {
+			if ( ! empty( $item['id'] ) ) {
+				$ids[] = (int) $item['id'];
+			}
+		}
+		$ids = array_slice( array_unique( $ids ), 0, $count );
+	}
+
+	if ( $ids ) {
+		$posts = get_posts(
+			array(
+				'post_type'           => 'post',
+				'post_status'         => 'publish',
+				'post__in'            => $ids,
+				'orderby'             => 'post__in',
+				'posts_per_page'      => $count,
+				'ignore_sticky_posts' => true,
+			)
+		);
+		return $posts;
+	}
+
+	$args = array(
+		'post_type'           => 'post',
+		'post_status'         => 'publish',
+		'posts_per_page'      => $count,
+		'ignore_sticky_posts' => true,
+	);
+	if ( $category ) {
+		$args['cat'] = (int) $category;
+	}
+	return get_posts( $args );
+}
+
+/**
  * Blog categories for Carbon select fields.
  */
 function kratom_feed_get_blog_categories() {
