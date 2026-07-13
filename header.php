@@ -1,6 +1,6 @@
 <?php
 /**
- * Header - debug stub (no template-parts).
+ * Header template
  *
  * @package KratomFeeds
  */
@@ -11,5 +11,6 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<?php wp_head(); ?>
 </head>
-<body <?php body_class(); ?>>
+<body <?php body_class( 'font-rubik antialiased' ); ?>>
 <?php wp_body_open(); ?>
+<?php get_template_part( 'template-parts/header/site', 'header' ); ?>

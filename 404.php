@@ -1,14 +1,10 @@
 <?php
 /**
- * 404 - debug stub.
+ * 404 template
  *
  * @package KratomFeeds
  */
 
 get_header();
-?>
-<main id="main-content">
-	<p><?php esc_html_e( 'Theme debug mode: templates disabled. Carbon Fields only.', 'kratom-feed' ); ?></p>
-</main>
-<?php
+get_template_part( 'template-parts/content/content', 'none' );
 get_footer();
