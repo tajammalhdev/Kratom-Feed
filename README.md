@@ -49,7 +49,7 @@ Edit any **Page** or **Block Snippet** and enable **Use Page Builder**.
 | Hero Featured | Magazine-style hero with featured post + 6-post grid |
 | Featured Mosaic | Ncmaz-style 4-card mosaic (2 small + wide + tall) |
 | Trust & Reviews | "Best Place to buy..." + Google rating + review carousel |
-| Categories Grid | Main Categories with Shop All button |
+| Categories Grid | Ncmaz-style trending topics cards (optional CTA button) |
 | Blog Posts | Editor's picks / latest articles grid or horizontal scroll |
 | Newsletter Signup | PG-style promo signup block |
 | Vein Types | 3-column education cards |

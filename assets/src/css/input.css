@@ -90,11 +90,11 @@
   }
 
   .pg-category-card {
-    @apply flex flex-col items-center gap-3 rounded-lg bg-neutral-100 p-6 transition-colors duration-300 hover:bg-neutral-200 cursor-pointer;
+    @apply cursor-pointer;
   }
 
   .pg-category-icon {
-    @apply flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-sm;
+    @apply shrink-0;
   }
 
   .pg-btn-shop-all {

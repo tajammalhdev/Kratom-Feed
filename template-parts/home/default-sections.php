@@ -27,15 +27,18 @@ $sections = array(
 		),
 	),
 	array(
-		'_type'      => 'categories_grid',
-		'button_url' => get_post_type_archive_link( 'post' ),
-		'categories' => array(
-			array( 'label' => 'Guides', 'url' => home_url( '/category/guides/' ) ),
-			array( 'label' => 'Strains', 'url' => home_url( '/category/strains/' ) ),
-			array( 'label' => 'Reviews', 'url' => home_url( '/category/reviews/' ) ),
-			array( 'label' => 'Research', 'url' => home_url( '/category/research/' ) ),
-			array( 'label' => 'News', 'url' => home_url( '/category/news/' ) ),
-			array( 'label' => 'Dosage', 'url' => home_url( '/category/dosage/' ) ),
+		'_type'            => 'categories_grid',
+		'title'            => 'Top trending topics',
+		'subtitle'         => 'Explore the most popular categories',
+		'show_rank_badges' => true,
+		'show_button'      => false,
+		'categories'       => array(
+			array( 'label' => 'Guides', 'url' => home_url( '/category/guides/' ), 'count_label' => '12 articles' ),
+			array( 'label' => 'Strains', 'url' => home_url( '/category/strains/' ), 'count_label' => '25 articles' ),
+			array( 'label' => 'Reviews', 'url' => home_url( '/category/reviews/' ), 'count_label' => '18 articles' ),
+			array( 'label' => 'Research', 'url' => home_url( '/category/research/' ), 'count_label' => '22 articles' ),
+			array( 'label' => 'News', 'url' => home_url( '/category/news/' ), 'count_label' => '30 articles' ),
+			array( 'label' => 'Dosage', 'url' => home_url( '/category/dosage/' ), 'count_label' => '28 articles' ),
 		),
 	),
 	array(

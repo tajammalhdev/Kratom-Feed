@@ -154,18 +154,36 @@ function kratom_feed_setup_carbon_fields() {
 						->set_min( 1 ),
 				) )
 
-				// Categories Grid
+				// Categories Grid (Ncmaz trending topics style)
 				->add_fields( 'categories_grid', __( 'Categories Grid', 'kratom-feed' ), array(
 					Field::make( 'text', 'title', __( 'Section Title', 'kratom-feed' ) )
-						->set_default_value( 'Main Categories' ),
+						->set_default_value( 'Top trending topics' ),
+					Field::make( 'textarea', 'subtitle', __( 'Subtitle', 'kratom-feed' ) )
+						->set_default_value( 'Explore the most popular categories' ),
+					Field::make( 'checkbox', 'show_rank_badges', __( 'Show #1 #2 #3 badges on first three cards', 'kratom-feed' ) )
+						->set_default_value( true ),
+					Field::make( 'checkbox', 'show_button', __( 'Show section button (optional)', 'kratom-feed' ) )
+						->set_default_value( false )
+						->set_help_text( __( 'Leave off unless you need a CTA next to the heading.', 'kratom-feed' ) ),
 					Field::make( 'text', 'button_text', __( 'Button Text', 'kratom-feed' ) )
-						->set_default_value( 'Shop All' ),
-					Field::make( 'text', 'button_url', __( 'Button URL', 'kratom-feed' ) ),
+						->set_conditional_logic( array(
+							array( 'field' => 'show_button', 'value' => true ),
+						) ),
+					Field::make( 'text', 'button_url', __( 'Button URL', 'kratom-feed' ) )
+						->set_conditional_logic( array(
+							array( 'field' => 'show_button', 'value' => true ),
+						) ),
 					Field::make( 'complex', 'categories', __( 'Categories', 'kratom-feed' ) )
 						->add_fields( array(
-							Field::make( 'image', 'icon', __( 'Icon', 'kratom-feed' ) ),
+							Field::make( 'image', 'icon', __( 'Image', 'kratom-feed' ) )
+								->set_help_text( __( 'Shown as a circular thumbnail.', 'kratom-feed' ) ),
 							Field::make( 'text', 'label', __( 'Label', 'kratom-feed' ) )->set_required( true ),
 							Field::make( 'text', 'url', __( 'URL', 'kratom-feed' ) ),
+							Field::make( 'select', 'wp_category', __( 'WordPress Category (optional)', 'kratom-feed' ) )
+								->set_options( 'kratom_feed_get_blog_categories' )
+								->set_help_text( __( 'Used to auto-fill article count. URL still set manually above if needed.', 'kratom-feed' ) ),
+							Field::make( 'text', 'count_label', __( 'Article count override', 'kratom-feed' ) )
+								->set_help_text( __( 'Optional. e.g. "13 articles". Leave empty to use the WordPress category count.', 'kratom-feed' ) ),
 						) )
 						->set_min( 1 ),
 				) )
