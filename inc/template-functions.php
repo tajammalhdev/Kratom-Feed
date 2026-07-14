@@ -208,20 +208,84 @@ function kratom_feed_reading_time( $post_id = null ) {
 }
 
 /**
+ * Build hierarchical nav tree for header drawer (WordPress menu or fallback).
+ *
+ * @return array<int, array{label:string,url:string,children:array}>
+ */
+function kratom_feed_get_nav_tree() {
+	$tree = array();
+
+	if ( has_nav_menu( 'primary' ) ) {
+		$locations = get_nav_menu_locations();
+		$menu_id   = $locations['primary'] ?? 0;
+		$items     = $menu_id ? wp_get_nav_menu_items( $menu_id ) : false;
+
+		if ( $items ) {
+			$by_parent = array();
+			foreach ( $items as $item ) {
+				$parent = (int) $item->menu_item_parent;
+				if ( ! isset( $by_parent[ $parent ] ) ) {
+					$by_parent[ $parent ] = array();
+				}
+				$by_parent[ $parent ][] = $item;
+			}
+
+			$build = function ( $parent_id ) use ( &$build, $by_parent ) {
+				$branch = array();
+				if ( empty( $by_parent[ $parent_id ] ) ) {
+					return $branch;
+				}
+				foreach ( $by_parent[ $parent_id ] as $item ) {
+					$branch[] = array(
+						'label'    => $item->title,
+						'url'      => $item->url,
+						'children' => $build( (int) $item->ID ),
+					);
+				}
+				return $branch;
+			};
+
+			return $build( 0 );
+		}
+	}
+
+	return array(
+		array(
+			'label'    => __( 'Kratom 101', 'kratom-feed' ),
+			'url'      => home_url( '/category/guides/' ),
+			'children' => array(
+				array( 'label' => __( 'What Is Kratom?', 'kratom-feed' ), 'url' => home_url( '/category/guides/' ), 'children' => array() ),
+				array( 'label' => __( 'Kratom Dosage', 'kratom-feed' ), 'url' => home_url( '/category/dosage/' ), 'children' => array() ),
+				array( 'label' => __( 'Kratom Guides', 'kratom-feed' ), 'url' => home_url( '/category/guides/' ), 'children' => array() ),
+			),
+		),
+		array(
+			'label'    => __( 'Strains', 'kratom-feed' ),
+			'url'      => home_url( '/category/strains/' ),
+			'children' => array(
+				array( 'label' => __( 'Red Vein', 'kratom-feed' ), 'url' => home_url( '/category/red-vein/' ), 'children' => array() ),
+				array( 'label' => __( 'Green Vein', 'kratom-feed' ), 'url' => home_url( '/category/green-vein/' ), 'children' => array() ),
+				array( 'label' => __( 'White Vein', 'kratom-feed' ), 'url' => home_url( '/category/white-vein/' ), 'children' => array() ),
+			),
+		),
+		array(
+			'label'    => __( 'Vendor Reviews', 'kratom-feed' ),
+			'url'      => home_url( '/category/reviews/' ),
+			'children' => array(
+				array( 'label' => __( 'All Reviews', 'kratom-feed' ), 'url' => home_url( '/category/reviews/' ), 'children' => array() ),
+			),
+		),
+		array( 'label' => __( 'Research', 'kratom-feed' ), 'url' => home_url( '/category/research/' ), 'children' => array() ),
+		array( 'label' => __( 'News', 'kratom-feed' ), 'url' => home_url( '/category/news/' ), 'children' => array() ),
+		array( 'label' => __( 'About', 'kratom-feed' ), 'url' => get_permalink( get_page_by_path( 'about' ) ) ?: home_url( '/about/' ), 'children' => array() ),
+	);
+}
+
+/**
  * Primary nav fallback links (legacy helper).
  */
 function kratom_feed_primary_nav_fallback() {
-	$links = array(
-		array( 'url' => get_post_type_archive_link( 'post' ), 'label' => __( 'All Articles', 'kratom-feed' ) ),
-		array( 'url' => home_url( '/category/guides/' ), 'label' => __( 'Guides', 'kratom-feed' ) ),
-		array( 'url' => home_url( '/category/strains/' ), 'label' => __( 'Strains', 'kratom-feed' ) ),
-		array( 'url' => home_url( '/category/reviews/' ), 'label' => __( 'Reviews', 'kratom-feed' ) ),
-		array( 'url' => home_url( '/category/research/' ), 'label' => __( 'Research', 'kratom-feed' ) ),
-		array( 'url' => home_url( '/category/news/' ), 'label' => __( 'News', 'kratom-feed' ) ),
-		array( 'url' => get_permalink( get_page_by_path( 'about' ) ) ?: home_url( '/about/' ), 'label' => __( 'About', 'kratom-feed' ) ),
-	);
-
-	foreach ( $links as $link ) {
+	foreach ( kratom_feed_get_nav_tree() as $link ) {
 		if ( empty( $link['url'] ) ) {
 			continue;
 		}
@@ -237,7 +301,6 @@ function kratom_feed_primary_nav_fallback() {
  * Render primary navigation (inline header links).
  */
 function kratom_feed_primary_nav() {
-	// Kept for backwards compatibility; header now renders nav inline.
 	if ( has_nav_menu( 'primary' ) ) {
 		return;
 	}
