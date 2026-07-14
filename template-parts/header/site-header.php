@@ -66,7 +66,7 @@ $nav_tree    = kratom_feed_get_nav_tree();
 			<button
 				id="mobile-menu-btn"
 				type="button"
-				class="pg-menu-toggle inline-flex h-10 w-12 shrink-0 items-center justify-center rounded-full bg-black text-white cursor-pointer"
+				class="pg-menu-toggle inline-flex shrink-0 items-center justify-center cursor-pointer"
 				aria-expanded="false"
 				aria-controls="mobile-menu"
 				aria-label="<?php esc_attr_e( 'Open menu', 'kratom-feed' ); ?>"

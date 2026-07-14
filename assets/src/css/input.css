@@ -118,7 +118,12 @@
 .pg-menu-toggle {
   position: relative;
   z-index: 1002;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, background-color 0.3s ease;
+  width: 3rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  background: #000;
+  color: #fff;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, background-color 0.3s ease, color 0.3s ease;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
 }
 
@@ -130,9 +135,16 @@
   transform: scale(0.96);
 }
 
+/* Kratom.org close: white pill + black X over the open panel */
 .pg-menu-toggle.is-open {
-  background: #111;
-  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.08);
+  background: #fff;
+  color: #111;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.pg-menu-toggle.is-open:hover {
+  background: #f3f4f6;
+  color: #000;
 }
 
 .pg-menu-toggle__icon {
