@@ -1,26 +1,50 @@
 <?php
 /**
- * Site header - Kratom.org style
+ * Site header - Magzin-style full-width bar + kratom.org drawer
  *
- * Layout: Logo | Search | Desktop links | Hamburger
- * Toggle opens a black right panel with accordion submenus (kratom.org pattern).
+ * Layout: Logo | Desktop nav | Search trigger | Hamburger
+ * Search opens Magzin-style modal. Hamburger opens black accordion drawer
+ * with Popular posts + Newsletter.
  *
  * @package KratomFeeds
  */
 
-$logo_text   = kratom_feed_get_option( 'site_tagline_short', 'Kratom.org' );
-$search_on   = kratom_feed_get_option( 'header_search_enabled', true );
-$placeholder = kratom_feed_get_option( 'header_search_placeholder', __( 'Type to search help articles', 'kratom-feed' ) );
-$sticky      = kratom_feed_get_option( 'header_sticky', true );
+$logo_text = kratom_feed_get_option( 'site_tagline_short', 'Kratom.org' );
+$search_on = kratom_feed_get_option( 'header_search_enabled', true );
+$sticky    = kratom_feed_get_option( 'header_sticky', true );
 $nav_tree    = kratom_feed_get_nav_tree();
+
+$popular_q = new WP_Query(
+	array(
+		'post_type'           => 'post',
+		'post_status'         => 'publish',
+		'posts_per_page'      => 4,
+		'ignore_sticky_posts' => true,
+		'orderby'             => 'comment_count',
+		'order'               => 'DESC',
+	)
+);
+if ( ! $popular_q->have_posts() ) {
+	$popular_q = new WP_Query(
+		array(
+			'post_type'           => 'post',
+			'post_status'         => 'publish',
+			'posts_per_page'      => 4,
+			'ignore_sticky_posts' => true,
+		)
+	);
+}
+
+$newsletter_heading = kratom_feed_get_option( 'newsletter_heading', __( 'Subscribe our newsletter', 'kratom-feed' ) );
+$newsletter_desc    = kratom_feed_get_option( 'newsletter_description', __( "You'll only receive updates on new articles, no spam.", 'kratom-feed' ) );
 ?>
 <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-sm focus:bg-black focus:px-4 focus:py-2 focus:text-white"><?php esc_html_e( 'Skip to content', 'kratom-feed' ); ?></a>
 
 <div id="reading-progress" class="fixed left-0 top-0 z-[70] h-1 w-0 bg-black transition-[width] duration-150" aria-hidden="true"></div>
 
-<header id="site-header" class="<?php echo $sticky ? 'sticky top-0' : ''; ?> z-[990] border-b border-gray-200 bg-white transition-shadow duration-300">
+<header id="site-header" class="<?php echo $sticky ? 'sticky top-0' : ''; ?> z-[990] border-b border-gray-200 bg-white/95 backdrop-blur-md transition-shadow duration-300">
 	<div class="pg-container">
-		<div class="flex h-16 items-center gap-3 md:h-[4.5rem] md:gap-5 lg:gap-6">
+		<div class="flex h-16 items-center justify-between gap-4 md:h-[4.5rem] md:gap-6">
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="flex shrink-0 items-center gap-2" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
 				<?php if ( has_custom_logo() ) : ?>
 					<?php the_custom_logo(); ?>
@@ -36,47 +60,45 @@ $nav_tree    = kratom_feed_get_nav_tree();
 				<?php endif; ?>
 			</a>
 
-			<?php if ( $search_on ) : ?>
-			<form role="search" method="get" class="relative min-w-0 flex-1 max-w-xl" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-				<label for="header-search" class="sr-only"><?php esc_html_e( 'Search articles', 'kratom-feed' ); ?></label>
-				<span class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true">
-					<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z"/></svg>
-				</span>
-				<input
-					id="header-search"
-					type="search"
-					name="s"
-					value="<?php echo esc_attr( get_search_query() ); ?>"
-					placeholder="<?php echo esc_attr( $placeholder ); ?>"
-					class="w-full rounded-full border border-gray-200 bg-white py-2.5 pl-11 pr-4 text-sm text-gray-800 placeholder:text-gray-400 focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-black/5"
-				/>
-				<input type="hidden" name="post_type" value="post" />
-			</form>
-			<?php else : ?>
-			<div class="min-w-0 flex-1"></div>
-			<?php endif; ?>
-
-			<nav class="hidden shrink-0 items-center gap-5 lg:flex xl:gap-6" aria-label="<?php esc_attr_e( 'Main navigation', 'kratom-feed' ); ?>">
+			<nav class="hidden min-w-0 flex-1 items-center justify-center gap-5 lg:flex xl:gap-7" aria-label="<?php esc_attr_e( 'Main navigation', 'kratom-feed' ); ?>">
 				<?php foreach ( $nav_tree as $link ) : ?>
 					<?php if ( empty( $link['url'] ) && empty( $link['children'] ) ) { continue; } ?>
 					<a href="<?php echo esc_url( $link['url'] ?: '#' ); ?>" class="whitespace-nowrap text-[15px] font-medium text-gray-900 transition-colors hover:text-black cursor-pointer"><?php echo esc_html( $link['label'] ); ?></a>
 				<?php endforeach; ?>
 			</nav>
 
-			<button
-				id="mobile-menu-btn"
-				type="button"
-				class="pg-menu-toggle inline-flex shrink-0 items-center justify-center cursor-pointer"
-				aria-expanded="false"
-				aria-controls="mobile-menu"
-				aria-label="<?php esc_attr_e( 'Open menu', 'kratom-feed' ); ?>"
-			>
-				<span class="pg-menu-toggle__icon" aria-hidden="true">
-					<span class="pg-menu-toggle__bar"></span>
-					<span class="pg-menu-toggle__bar"></span>
-					<span class="pg-menu-toggle__bar"></span>
-				</span>
-			</button>
+			<div class="flex shrink-0 items-center gap-3 md:gap-4">
+				<?php if ( $search_on ) : ?>
+				<button
+					type="button"
+					id="search-modal-open"
+					class="pg-search-trigger inline-flex items-center gap-2 text-[15px] font-medium text-gray-900 transition-opacity hover:opacity-70 cursor-pointer"
+					aria-expanded="false"
+					aria-controls="search-modal"
+					aria-label="<?php esc_attr_e( 'Open search', 'kratom-feed' ); ?>"
+				>
+					<svg class="h-7 w-7" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+						<path d="M25.6667 25.6667L20.6667 20.6667M6.33337 14.6667C6.33337 10.0643 10.0643 6.33337 14.6667 6.33337C19.2691 6.33337 23 10.0643 23 14.6667C23 19.2691 19.2691 23 14.6667 23C10.0643 23 6.33337 19.2691 6.33337 14.6667Z" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+					<span class="hidden md:inline"><?php esc_html_e( 'Search', 'kratom-feed' ); ?></span>
+				</button>
+				<?php endif; ?>
+
+				<button
+					id="mobile-menu-btn"
+					type="button"
+					class="pg-menu-toggle inline-flex shrink-0 items-center justify-center cursor-pointer"
+					aria-expanded="false"
+					aria-controls="mobile-menu"
+					aria-label="<?php esc_attr_e( 'Open menu', 'kratom-feed' ); ?>"
+				>
+					<span class="pg-menu-toggle__icon" aria-hidden="true">
+						<span class="pg-menu-toggle__bar"></span>
+						<span class="pg-menu-toggle__bar"></span>
+						<span class="pg-menu-toggle__bar"></span>
+					</span>
+				</button>
+			</div>
 		</div>
 	</div>
 
@@ -113,8 +135,48 @@ $nav_tree    = kratom_feed_get_nav_tree();
 					</li>
 				<?php endforeach; ?>
 			</ul>
+
+			<?php if ( $popular_q->have_posts() ) : ?>
+			<div class="pg-h-nav__popular">
+				<p class="pg-h-nav__section-title"><?php esc_html_e( 'Popular posts', 'kratom-feed' ); ?></p>
+				<ul class="pg-h-nav__popular-list">
+					<?php
+					while ( $popular_q->have_posts() ) :
+						$popular_q->the_post();
+						?>
+						<li>
+							<a href="<?php the_permalink(); ?>" class="pg-h-nav__popular-item">
+								<?php if ( has_post_thumbnail() ) : ?>
+									<span class="pg-h-nav__popular-thumb">
+										<?php the_post_thumbnail( 'thumbnail', array( 'class' => 'h-full w-full object-cover', 'loading' => 'lazy' ) ); ?>
+									</span>
+								<?php endif; ?>
+								<span class="pg-h-nav__popular-meta">
+									<span class="pg-h-nav__popular-name"><?php the_title(); ?></span>
+									<span class="pg-h-nav__popular-info"><?php echo esc_html( get_the_date() . ' / ' . kratom_feed_reading_time() ); ?></span>
+								</span>
+							</a>
+						</li>
+					<?php endwhile; wp_reset_postdata(); ?>
+				</ul>
+			</div>
+			<?php endif; ?>
+
+			<div class="pg-h-nav__newsletter">
+				<p class="pg-h-nav__section-title"><?php echo esc_html( $newsletter_heading ); ?></p>
+				<?php if ( $newsletter_desc ) : ?>
+					<p class="pg-h-nav__newsletter-desc"><?php echo esc_html( $newsletter_desc ); ?></p>
+				<?php endif; ?>
+				<div class="pg-h-nav__newsletter-form">
+					<?php get_template_part( 'template-parts/components/newsletter', 'form' ); ?>
+				</div>
+			</div>
 		</div>
 	</nav>
 </header>
 
 <div id="menu-overlay" class="pg-nav-overlay" aria-hidden="true"></div>
+
+<?php if ( $search_on ) : ?>
+	<?php get_template_part( 'template-parts/header/search', 'modal' ); ?>
+<?php endif; ?>

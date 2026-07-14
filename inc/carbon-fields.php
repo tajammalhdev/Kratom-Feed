@@ -38,7 +38,7 @@ function kratom_feed_setup_carbon_fields() {
 			Field::make( 'checkbox', 'header_search_enabled', __( 'Enable Search', 'kratom-feed' ) )
 				->set_default_value( true ),
 			Field::make( 'text', 'header_search_placeholder', __( 'Search Placeholder', 'kratom-feed' ) )
-				->set_default_value( __( 'Type to search help articles', 'kratom-feed' ) ),
+				->set_default_value( __( 'What Are You Looking For?', 'kratom-feed' ) ),
 			Field::make( 'checkbox', 'header_sticky', __( 'Sticky Header', 'kratom-feed' ) )
 				->set_default_value( true ),
 		) )

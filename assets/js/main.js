@@ -29,6 +29,8 @@
       on = v;
       locked = true;
 
+      if (v) window.kratomFeedCloseSearch?.();
+
       header.classList.toggle("is-open", v);
       btn.classList.toggle("is-open", v);
       menu.classList.toggle("is-open", v);
@@ -80,8 +82,49 @@
     });
 
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && on) setOpen(false);
+      if (e.key !== "Escape" || !on) return;
+      if (document.getElementById("search-modal")?.classList.contains("is-open")) return;
+      setOpen(false);
     });
+
+    window.kratomFeedCloseNav = () => setOpen(false);
+  }
+
+  function initSearchModal() {
+    const modal = document.getElementById("search-modal");
+    const openBtn = document.getElementById("search-modal-open");
+    const closeBtn = document.getElementById("search-modal-close");
+    const overlay = document.getElementById("search-modal-overlay");
+    const input = document.getElementById("modal-search-input");
+    if (!modal || !openBtn) return;
+
+    let open = false;
+
+    const setOpen = (v) => {
+      if (open === v) return;
+      open = v;
+      modal.classList.toggle("is-open", v);
+      modal.setAttribute("aria-hidden", String(!v));
+      openBtn.setAttribute("aria-expanded", String(v));
+      document.body.style.overflow = v ? "hidden" : "";
+
+      if (v) {
+        window.kratomFeedCloseNav?.();
+        window.setTimeout(() => input?.focus({ preventScroll: true }), reduced ? 0 : 80);
+      } else {
+        openBtn.focus({ preventScroll: true });
+      }
+    };
+
+    openBtn.addEventListener("click", () => setOpen(true));
+    closeBtn?.addEventListener("click", () => setOpen(false));
+    overlay?.addEventListener("click", () => setOpen(false));
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && open) setOpen(false);
+    });
+
+    window.kratomFeedCloseSearch = () => setOpen(false);
   }
 
   function initFaq() {
@@ -222,7 +265,7 @@
     const grid = document.getElementById("article-grid");
     if (!grid) return;
     const cards = grid.querySelectorAll("[data-title]");
-    document.querySelectorAll("#header-search, #mobile-search, .sidebar-search-input").forEach((input) => {
+    document.querySelectorAll("#modal-search-input, #header-search, #mobile-search, .sidebar-search-input").forEach((input) => {
       input.addEventListener("input", (e) => {
         const q = e.target.value.toLowerCase();
         cards.forEach((c) => { c.style.display = !q || c.dataset.title.toLowerCase().includes(q) ? "" : "none"; });
@@ -233,6 +276,7 @@
   document.addEventListener("DOMContentLoaded", () => {
     initHeaderShadow();
     initMobileNav();
+    initSearchModal();
     initFaq();
     initReviewsCarousel();
     initReadingProgress();
