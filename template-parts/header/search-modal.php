@@ -25,15 +25,15 @@ $recommended = new WP_Query(
 	)
 );
 ?>
-<div class="sidebar-overlay" id="search-modal-overlay" class="fixed left-0 top-0 h-full w-full bg-black/50 z-100 transition-all duration-300 ease-in-out"></div>
-<div class="popup-search d-none d-md-block show" id="search-modal">
+<div class="sidebar-overlay" id="search-modal-overlay"></div>
+<div class="popup-search d-none d-md-block show relative" id="search-modal">
 	<div class="container">
 		<div class="row">
 			<div class="col-10 mx-auto">
 				<div class="popup-search-content position-relative">
 					<a href="#" class="close-popup position-absolute top-0 end-0 m-3" id="search-modal-close"><svg class="dark-mode-invert" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M17.25 6.75L6.75 17.25" stroke="#0E0E0F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M6.75 6.75L17.25 17.25" stroke="#0E0E0F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
 					<h5 class="mb-4">Search</h5>
-					<form class="d-flex flex-wrap flex-lg-nowrap gap-2" action="#">
+					<form class="flex flex-wrap flex-lg-nowrap gap-2 lg:flex-nowrap" action="#">
 						<input class="form-control" type="text" placeholder="What Are You Looking For?" 	
 						value="<?php echo esc_attr( get_search_query() ); ?>"
 						placeholder="<?php echo esc_attr( $placeholder ); ?>"

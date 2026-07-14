@@ -983,3 +983,16 @@
   transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
   display: inline-flex;
 }
+
+.sidebar-overlay {
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  background-color: #0009;
+  width: 100%;
+  height: 100%;
+  transition: all .3s ease-in-out;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
