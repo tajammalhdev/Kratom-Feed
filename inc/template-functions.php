@@ -208,7 +208,7 @@ function kratom_feed_reading_time( $post_id = null ) {
 }
 
 /**
- * Primary nav fallback links.
+ * Primary nav fallback links (legacy helper).
  */
 function kratom_feed_primary_nav_fallback() {
 	$links = array(
@@ -221,37 +221,26 @@ function kratom_feed_primary_nav_fallback() {
 		array( 'url' => get_permalink( get_page_by_path( 'about' ) ) ?: home_url( '/about/' ), 'label' => __( 'About', 'kratom-feed' ) ),
 	);
 
-	echo '<div class="pg-container flex items-center justify-center gap-6 py-3 text-sm font-medium text-neutral-800 xl:gap-8">';
 	foreach ( $links as $link ) {
 		if ( empty( $link['url'] ) ) {
 			continue;
 		}
 		printf(
-			'<a href="%s" class="transition-colors hover:text-green-600 cursor-pointer">%s</a>',
+			'<a href="%s" class="whitespace-nowrap text-[15px] font-medium text-gray-900 transition-colors hover:text-black cursor-pointer">%s</a>',
 			esc_url( $link['url'] ),
 			esc_html( $link['label'] )
 		);
 	}
-	echo '</div>';
 }
 
 /**
- * Render primary navigation.
+ * Render primary navigation (inline header links).
  */
 function kratom_feed_primary_nav() {
+	// Kept for backwards compatibility; header now renders nav inline.
 	if ( has_nav_menu( 'primary' ) ) {
-		wp_nav_menu( array(
-			'theme_location' => 'primary',
-			'container'      => 'nav',
-			'container_class'=> 'hidden lg:block',
-			'menu_class'     => 'pg-container flex items-center justify-center gap-6 py-3 text-sm font-medium text-neutral-800 xl:gap-8 list-none m-0 p-0',
-			'fallback_cb'    => false,
-			'depth'          => 1,
-		) );
-	} else {
-		echo '<nav class="hidden lg:block" aria-label="' . esc_attr__( 'Main navigation', 'kratom-feed' ) . '">';
-		kratom_feed_primary_nav_fallback();
-		echo '</nav>';
+		return;
 	}
+	kratom_feed_primary_nav_fallback();
 }
 

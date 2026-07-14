@@ -16,22 +16,39 @@
 
   function initMobileNav() {
     const btn = document.getElementById("mobile-menu-btn");
+    const closeBtn = document.getElementById("mobile-menu-close");
     const menu = document.getElementById("mobile-menu");
-    const open = document.getElementById("menu-icon-open");
-    const close = document.getElementById("menu-icon-close");
+    const overlay = document.getElementById("menu-overlay");
+    const openIcon = document.getElementById("menu-icon-open");
+    const closeIcon = document.getElementById("menu-icon-close");
     if (!btn || !menu) return;
+
     let on = false;
+
     const toggle = (v) => {
       on = v;
       btn.setAttribute("aria-expanded", String(v));
-      menu.classList.toggle("hidden", !v);
-      open?.classList.toggle("hidden", v);
-      close?.classList.toggle("hidden", !v);
+      btn.setAttribute("aria-label", v ? "Close menu" : "Open menu");
+      menu.setAttribute("aria-hidden", String(!v));
+      menu.classList.toggle("translate-x-full", !v);
+      menu.classList.toggle("translate-x-0", v);
+      openIcon?.classList.toggle("hidden", v);
+      closeIcon?.classList.toggle("hidden", !v);
+      if (overlay) {
+        overlay.classList.toggle("opacity-0", !v);
+        overlay.classList.toggle("pointer-events-none", !v);
+        overlay.setAttribute("aria-hidden", String(!v));
+      }
       document.body.style.overflow = v ? "hidden" : "";
     };
+
     btn.addEventListener("click", () => toggle(!on));
+    closeBtn?.addEventListener("click", () => toggle(false));
+    overlay?.addEventListener("click", () => toggle(false));
     menu.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => toggle(false)));
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && on) toggle(false); });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && on) toggle(false);
+    });
   }
 
   function initFaq() {

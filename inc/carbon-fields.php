@@ -34,19 +34,11 @@ function kratom_feed_setup_carbon_fields() {
 		) )
 		->add_tab( __( 'Header', 'kratom-feed' ), array(
 			Field::make( 'text', 'site_tagline_short', __( 'Logo Text', 'kratom-feed' ) )
-				->set_default_value( 'Kratom Feed' ),
+				->set_default_value( 'Kratom.org' ),
 			Field::make( 'checkbox', 'header_search_enabled', __( 'Enable Search', 'kratom-feed' ) )
 				->set_default_value( true ),
 			Field::make( 'text', 'header_search_placeholder', __( 'Search Placeholder', 'kratom-feed' ) )
-				->set_default_value( __( 'Find: best guides for beginners', 'kratom-feed' ) ),
-			Field::make( 'text', 'header_feed_label', __( 'Feed Button Label', 'kratom-feed' ) )
-				->set_default_value( 'Kratom Feed' ),
-			Field::make( 'text', 'header_feed_url', __( 'Feed Button URL', 'kratom-feed' ) )
-				->set_default_value( '' ),
-			Field::make( 'text', 'header_subscribe_label', __( 'Subscribe Button Label', 'kratom-feed' ) )
-				->set_default_value( 'Subscribe' ),
-			Field::make( 'text', 'header_about_label', __( 'About Button Label', 'kratom-feed' ) )
-				->set_default_value( 'About' ),
+				->set_default_value( __( 'Type to search help articles', 'kratom-feed' ) ),
 			Field::make( 'checkbox', 'header_sticky', __( 'Sticky Header', 'kratom-feed' ) )
 				->set_default_value( true ),
 		) )

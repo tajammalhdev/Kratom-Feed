@@ -21,9 +21,7 @@
 
 @layer base {
   :root {
-    --header-top: 4.5rem;
-    --header-nav: 3rem;
-    --header-height: calc(var(--header-top) + var(--header-nav));
+    --header-height: 4.5rem;
   }
 
   html { scroll-behavior: smooth; }
