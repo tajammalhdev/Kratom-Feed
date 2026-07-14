@@ -93,10 +93,25 @@ function kratom_feed_scripts() {
 		KRATOM_FEED_VERSION
 	);
 
+	wp_enqueue_style(
+		'swiper',
+		'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css',
+		array(),
+		'11'
+	);
+
+	wp_enqueue_script(
+		'swiper',
+		'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js',
+		array(),
+		'11',
+		true
+	);
+
 	wp_enqueue_script(
 		$prefix . '-main',
 		KRATOM_FEED_URI . '/assets/js/main.js',
-		array(),
+		array( 'swiper' ),
 		KRATOM_FEED_VERSION,
 		true
 	);

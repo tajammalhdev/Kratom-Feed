@@ -127,6 +127,21 @@
     window.kratomFeedCloseSearch = () => setOpen(false);
   }
 
+  function initSearchRecommendedSwiper() {
+    if (typeof window.Swiper === "undefined") return;
+    document.querySelectorAll(".swiper-popup-search").forEach((el) => {
+      if (el.swiper) return;
+      new window.Swiper(el, {
+        slidesPerView: 1.2,
+        spaceBetween: 16,
+        breakpoints: {
+          640: { slidesPerView: 2.2, spaceBetween: 18 },
+          992: { slidesPerView: 3, spaceBetween: 24 },
+        },
+      });
+    });
+  }
+
   function initFaq() {
     document.querySelectorAll(".faq-item").forEach((item) => {
       const trigger = item.querySelector(".faq-trigger");
@@ -277,6 +292,7 @@
     initHeaderShadow();
     initMobileNav();
     initSearchModal();
+    initSearchRecommendedSwiper();
     initFaq();
     initReviewsCarousel();
     initReadingProgress();
