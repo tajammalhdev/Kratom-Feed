@@ -18,6 +18,13 @@ add_action( 'carbon_fields_register_fields', 'kratom_feed_setup_carbon_fields' )
  * Register Carbon containers.
  */
 function kratom_feed_setup_carbon_fields() {
+	$quiz_defaults = function_exists( 'kratom_feed_quiz_defaults' )
+		? kratom_feed_quiz_defaults()
+		: array(
+			'trust_items' => array(),
+			'questions'   => array(),
+			'results'     => array(),
+		);
 
 	// --- Theme Options -----------------------------------------------
 	Container::make( 'theme_options', __( 'Theme Options', 'kratom-feed' ) )
@@ -91,6 +98,137 @@ function kratom_feed_setup_carbon_fields() {
 			Field::make( 'textarea', 'blog_archive_subtitle', __( 'Blog Archive Subtitle', 'kratom-feed' ) ),
 			Field::make( 'checkbox', 'show_reading_time', __( 'Show Reading Time', 'kratom-feed' ) )
 				->set_default_value( true ),
+		) )
+		->add_tab( __( 'Quiz', 'kratom-feed' ), array(
+			Field::make( 'separator', 'quiz_sep_copy', __( 'Presentation', 'kratom-feed' ) ),
+			Field::make( 'text', 'quiz_badge', __( 'Hero Badge', 'kratom-feed' ) )
+				->set_default_value( __( 'Free · Takes 60 Seconds', 'kratom-feed' ) ),
+			Field::make( 'text', 'quiz_title', __( 'Hero Title', 'kratom-feed' ) )
+				->set_default_value( __( 'Find Your Perfect Kratom', 'kratom-feed' ) ),
+			Field::make( 'textarea', 'quiz_intro', __( 'Hero Introduction', 'kratom-feed' ) )
+				->set_rows( 3 )
+				->set_default_value( __( 'Answer 5 quick questions and we\'ll match you with strain guides that fit your goals.', 'kratom-feed' ) ),
+			Field::make( 'textarea', 'quiz_disclaimer', __( 'FDA / Educational Disclaimer', 'kratom-feed' ) )
+				->set_rows( 3 )
+				->set_default_value( __( 'These statements have not been evaluated by the FDA. Kratom is not intended to diagnose, treat, cure, or prevent any disease. Educational information only.', 'kratom-feed' ) ),
+			Field::make( 'text', 'quiz_progress_label', __( 'Progress Label', 'kratom-feed' ) )
+				->set_default_value( __( 'Question {current} of {total}', 'kratom-feed' ) )
+				->set_help_text( __( 'Use {current} and {total} placeholders.', 'kratom-feed' ) ),
+			Field::make( 'text', 'quiz_back_label', __( 'Back Button', 'kratom-feed' ) )
+				->set_default_value( __( 'Back', 'kratom-feed' ) ),
+			Field::make( 'text', 'quiz_next_label', __( 'Continue Button', 'kratom-feed' ) )
+				->set_default_value( __( 'Continue', 'kratom-feed' ) ),
+
+			Field::make( 'separator', 'quiz_sep_gate', __( 'Email Gate (UI only — no storage)', 'kratom-feed' ) ),
+			Field::make( 'text', 'quiz_gate_icon', __( 'Gate Icon / Emoji', 'kratom-feed' ) )
+				->set_default_value( '🎯' ),
+			Field::make( 'text', 'quiz_gate_title', __( 'Gate Title', 'kratom-feed' ) )
+				->set_default_value( __( 'Your Perfect Match is Ready!', 'kratom-feed' ) ),
+			Field::make( 'textarea', 'quiz_gate_text', __( 'Gate Text', 'kratom-feed' ) )
+				->set_rows( 3 )
+				->set_default_value( __( 'Enter your details to see your personalized recommendation. We don\'t store this information yet — it stays in your browser for this session only.', 'kratom-feed' ) ),
+			Field::make( 'text', 'quiz_gate_btn', __( 'Gate Button', 'kratom-feed' ) )
+				->set_default_value( __( 'See My Results →', 'kratom-feed' ) ),
+			Field::make( 'text', 'quiz_gate_legal', __( 'Gate Legal Text', 'kratom-feed' ) )
+				->set_default_value( __( 'No spam. By continuing you agree to our Privacy Policy.', 'kratom-feed' ) ),
+			Field::make( 'text', 'quiz_gate_legal_url', __( 'Privacy Policy URL', 'kratom-feed' ) )
+				->set_default_value( '/privacy-policy/' ),
+
+			Field::make( 'separator', 'quiz_sep_results', __( 'Results Copy', 'kratom-feed' ) ),
+			Field::make( 'text', 'quiz_results_badge', __( 'Results Badge', 'kratom-feed' ) )
+				->set_default_value( __( 'Your Personalized Results', 'kratom-feed' ) ),
+			Field::make( 'text', 'quiz_results_title', __( 'Results Title', 'kratom-feed' ) )
+				->set_default_value( __( "Here's What We Recommend", 'kratom-feed' ) ),
+			Field::make( 'textarea', 'quiz_results_sub', __( 'Results Subtitle', 'kratom-feed' ) )
+				->set_rows( 2 )
+				->set_default_value( __( 'Based on your answers, here are educational guides matched to your goals.', 'kratom-feed' ) ),
+			Field::make( 'text', 'quiz_primary_badge', __( 'Primary Card Badge', 'kratom-feed' ) )
+				->set_default_value( __( 'Best Match For You', 'kratom-feed' ) ),
+			Field::make( 'text', 'quiz_secondary_title', __( 'Secondary Card Title', 'kratom-feed' ) )
+				->set_default_value( __( 'Also Consider', 'kratom-feed' ) ),
+			Field::make( 'text', 'quiz_bonus_title', __( 'Bonus Card Title', 'kratom-feed' ) )
+				->set_default_value( __( 'One More Thought', 'kratom-feed' ) ),
+			Field::make( 'text', 'quiz_cta_primary', __( 'Primary CTA Label', 'kratom-feed' ) )
+				->set_default_value( __( 'Read Guide →', 'kratom-feed' ) ),
+			Field::make( 'text', 'quiz_cta_secondary', __( 'Secondary CTA Label', 'kratom-feed' ) )
+				->set_default_value( __( 'View Guide →', 'kratom-feed' ) ),
+			Field::make( 'text', 'quiz_rec_trust', __( 'Primary Card Trust Line', 'kratom-feed' ) )
+				->set_default_value( __( 'Educational · Research-backed · Always verify local laws', 'kratom-feed' ) ),
+			Field::make( 'text', 'quiz_retake_label', __( 'Retake Button', 'kratom-feed' ) )
+				->set_default_value( __( '↩ Retake the Quiz', 'kratom-feed' ) ),
+			Field::make( 'complex', 'quiz_trust_items', __( 'Trust Bar Items', 'kratom-feed' ) )
+				->add_fields( array(
+					Field::make( 'text', 'label', __( 'Label', 'kratom-feed' ) )->set_required( true ),
+				) )
+				->set_default_value( $quiz_defaults['trust_items'] )
+				->set_header_template( '<%- label %>' ),
+
+			Field::make( 'separator', 'quiz_sep_questions', __( 'Questions', 'kratom-feed' ) )
+				->set_help_text( __( 'Leave empty to use built-in defaults. Stable keys must not change once live.', 'kratom-feed' ) ),
+			Field::make( 'complex', 'quiz_questions', __( 'Quiz Questions', 'kratom-feed' ) )
+				->set_layout( 'tabbed-vertical' )
+				->set_default_value( $quiz_defaults['questions'] )
+				->add_fields( array(
+					Field::make( 'text', 'key', __( 'Stable Key', 'kratom-feed' ) )
+						->set_help_text( __( 'e.g. goal, experience, format', 'kratom-feed' ) )
+						->set_required( true ),
+					Field::make( 'text', 'prompt', __( 'Question Prompt', 'kratom-feed' ) )->set_required( true ),
+					Field::make( 'textarea', 'help', __( 'Help Text', 'kratom-feed' ) )->set_rows( 2 ),
+					Field::make( 'checkbox', 'required', __( 'Required', 'kratom-feed' ) )->set_default_value( true ),
+					Field::make( 'checkbox', 'show_disclaimer', __( 'Show Global Disclaimer Under Prompt', 'kratom-feed' ) ),
+					Field::make( 'complex', 'options', __( 'Options', 'kratom-feed' ) )
+						->add_fields( array(
+							Field::make( 'text', 'key', __( 'Option Key', 'kratom-feed' ) )->set_required( true ),
+							Field::make( 'text', 'icon', __( 'Icon / Emoji', 'kratom-feed' ) ),
+							Field::make( 'text', 'label', __( 'Label', 'kratom-feed' ) )->set_required( true ),
+							Field::make( 'text', 'description', __( 'Description', 'kratom-feed' ) ),
+							Field::make( 'text', 'bonus_result', __( 'Bonus Result Key (optional)', 'kratom-feed' ) )
+								->set_help_text( __( 'If set, can surface as the bonus card when this option is chosen.', 'kratom-feed' ) ),
+							Field::make( 'complex', 'weights', __( 'Result Weights', 'kratom-feed' ) )
+								->add_fields( array(
+									Field::make( 'text', 'result_key', __( 'Result Key', 'kratom-feed' ) )->set_required( true ),
+									Field::make( 'text', 'points', __( 'Points', 'kratom-feed' ) )
+										->set_attribute( 'type', 'number' )
+										->set_default_value( '1' ),
+								) )
+								->set_header_template( '<%- result_key %> (<%- points %>)' ),
+						) )
+						->set_header_template( '<%- label %>' )
+						->set_min( 1 ),
+				) )
+				->set_header_template( '<%- prompt %>' ),
+
+			Field::make( 'separator', 'quiz_sep_result_cards', __( 'Recommendation Cards', 'kratom-feed' ) ),
+			Field::make( 'complex', 'quiz_results', __( 'Results / Strains', 'kratom-feed' ) )
+				->set_layout( 'tabbed-vertical' )
+				->set_default_value( $quiz_defaults['results'] )
+				->add_fields( array(
+					Field::make( 'text', 'key', __( 'Stable Key', 'kratom-feed' ) )
+						->set_help_text( __( 'Must match result_key values in question weights.', 'kratom-feed' ) )
+						->set_required( true ),
+					Field::make( 'text', 'name', __( 'Name', 'kratom-feed' ) )->set_required( true ),
+					Field::make( 'text', 'format', __( 'Format Label', 'kratom-feed' ) )
+						->set_default_value( __( 'Guide', 'kratom-feed' ) ),
+					Field::make( 'textarea', 'why', __( 'Why This Match', 'kratom-feed' ) )->set_rows( 3 ),
+					Field::make( 'text', 'tags', __( 'Tags (comma-separated)', 'kratom-feed' ) ),
+					Field::make( 'image', 'image', __( 'Image', 'kratom-feed' ) )->set_value_type( 'id' ),
+					Field::make( 'association', 'article', __( 'Related Article (optional)', 'kratom-feed' ) )
+						->set_types( array(
+							array(
+								'type'      => 'post',
+								'post_type' => 'post',
+							),
+						) )
+						->set_max( 1 ),
+					Field::make( 'text', 'cta_url', __( 'CTA URL', 'kratom-feed' ) )
+						->set_help_text( __( 'Overrides related article URL when set.', 'kratom-feed' ) ),
+					Field::make( 'text', 'cta_label', __( 'CTA Label Override', 'kratom-feed' ) ),
+					Field::make( 'textarea', 'caution', __( 'Caution Note', 'kratom-feed' ) )->set_rows( 2 ),
+					Field::make( 'text', 'priority', __( 'Tie-break Priority (lower wins)', 'kratom-feed' ) )
+						->set_attribute( 'type', 'number' )
+						->set_default_value( '100' ),
+				) )
+				->set_header_template( '<%- name %> (<%- key %>)' ),
 		) );
 
 	// --- Featured flag on posts (WooCommerce-style) -------------------
@@ -250,6 +388,21 @@ function kratom_feed_setup_carbon_fields() {
 					Field::make( 'text', 'form_heading', __( 'Signup Panel Heading', 'kratom-feed' ) )
 						->set_default_value( __( 'Join Our Kratom Newsletter', 'kratom-feed' ) )
 						->set_help_text( __( 'The Omnisend signup form will be connected to the reserved panel later.', 'kratom-feed' ) ),
+				) )
+
+				->add_fields( 'quiz_cta', __( 'Quiz CTA', 'kratom-feed' ), array(
+					Field::make( 'text', 'badge', __( 'Badge', 'kratom-feed' ) )
+						->set_default_value( __( 'Free · Takes 60 Seconds', 'kratom-feed' ) ),
+					Field::make( 'text', 'title', __( 'Title', 'kratom-feed' ) )
+						->set_default_value( __( 'Find Your Perfect Kratom', 'kratom-feed' ) ),
+					Field::make( 'textarea', 'description', __( 'Description', 'kratom-feed' ) )
+						->set_rows( 3 )
+						->set_default_value( __( 'Answer a few questions and get educational strain recommendations matched to your goals.', 'kratom-feed' ) ),
+					Field::make( 'text', 'button_text', __( 'Button Text', 'kratom-feed' ) )
+						->set_default_value( __( 'Take the Quiz', 'kratom-feed' ) ),
+					Field::make( 'text', 'button_url', __( 'Quiz Page URL', 'kratom-feed' ) )
+						->set_default_value( '/kratom-quiz/' )
+						->set_help_text( __( 'Link to a page using the Strain Quiz template or containing [kratom_quiz].', 'kratom-feed' ) ),
 				) ),
 		) );
 }

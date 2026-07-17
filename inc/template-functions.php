@@ -499,3 +499,101 @@ function kratom_feed_primary_nav() {
 	kratom_feed_primary_nav_fallback();
 }
 
+/**
+ * Custom comment markup for Tailwind-styled comment lists.
+ *
+ * @param WP_Comment $comment Comment object.
+ * @param array      $args    wp_list_comments() args.
+ * @param int        $depth   Current nesting depth.
+ */
+function kratom_feed_comment_callback( $comment, $args, $depth ) {
+	$tag         = ( 'div' === $args['style'] ) ? 'div' : 'li';
+	$avatar_size = isset( $args['avatar_size'] ) ? (int) $args['avatar_size'] : 48;
+	if ( $depth > 1 ) {
+		$avatar_size = max( 36, (int) round( $avatar_size * 0.75 ) );
+	}
+	?>
+	<<?php echo esc_html( $tag ); ?> id="comment-<?php comment_ID(); ?>" <?php comment_class( $depth > 1 ? 'kf-comment kf-comment--reply' : 'kf-comment', $comment ); ?>>
+		<article id="div-comment-<?php comment_ID(); ?>" class="flex gap-4  bg-white p-4  sm:p-5">
+			<div class="shrink-0">
+				<?php
+				echo get_avatar(
+					$comment,
+					$avatar_size,
+					'',
+					'',
+					array(
+						'class' => 'object-cover ',
+					)
+				);
+				?>
+			</div>
+
+			<div class="min-w-0 flex-1">
+				<header class="mb-2 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+					<?php
+					printf(
+						'<cite class="not-italic text-sm font-bold text-gray-900 [&_a]:text-gray-900 [&_a]:no-underline hover:[&_a]:text-pg-green-dark">%s</cite>',
+						get_comment_author_link( $comment )
+					);
+					?>
+					<a
+						href="<?php echo esc_url( get_comment_link( $comment, $args ) ); ?>"
+						class="text-xs font-medium uppercase tracking-wide text-gray-400 transition-colors hover:text-pg-green-dark"
+					>
+						<time datetime="<?php comment_time( 'c' ); ?>">
+							<?php echo esc_html( get_comment_date( '', $comment ) ); ?>
+						</time>
+					</a>
+				</header>
+
+				<?php if ( '0' === (string) $comment->comment_approved ) : ?>
+				<p class="mb-2 rounded-lg bg-amber-50 px-3 py-2 text-sm font-medium text-amber-800">
+					<?php esc_html_e( 'Your comment is awaiting moderation.', 'kratom-feed' ); ?>
+				</p>
+				<?php endif; ?>
+
+				<div class="text-[15px] leading-relaxed text-gray-600 [&_a]:font-medium [&_a]:text-pg-green-dark [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-pg-green [&_p]:mb-3 [&_p:last-child]:mb-0">
+					<?php comment_text(); ?>
+				</div>
+
+				<?php
+				comment_reply_link(
+					array_merge(
+						$args,
+						array(
+							'add_below'  => 'div-comment',
+							'depth'      => $depth,
+							'max_depth'  => $args['max_depth'],
+							'before'     => '<div class="reply mt-3">',
+							'after'      => '</div>',
+							'reply_text' => __( 'Reply', 'kratom-feed' ),
+						)
+					)
+				);
+				?>
+			</div>
+		</article>
+	<?php
+	// Closing </li>/</div> is handled by Walker_Comment::end_el after nested children.
+}
+
+/**
+ * Style WordPress comment reply links with Tailwind classes.
+ *
+ * @param string $link Reply link HTML.
+ * @return string
+ */
+function kratom_feed_comment_reply_link_class( $link ) {
+	if ( ! $link ) {
+		return $link;
+	}
+	return preg_replace(
+		'/class=[\'"]([^\'"]*)[\'"]/',
+		'class="$1 text-xs font-bold uppercase tracking-[0.12em] text-pg-green-dark underline underline-offset-4 transition-colors hover:text-pg-green"',
+		$link,
+		1
+	);
+}
+add_filter( 'comment_reply_link', 'kratom_feed_comment_reply_link_class' );
+

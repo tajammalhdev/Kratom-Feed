@@ -74,6 +74,29 @@ function kratom_feed_widgets_init() {
 add_action( 'widgets_init', 'kratom_feed_widgets_init' );
 
 /**
+ * The blog sidebar renders its own thumbnail-based recent-post list.
+ * Suppress the core text-only Recent Posts widget to avoid duplicates.
+ *
+ * @param array|false $instance Widget instance settings.
+ * @param WP_Widget   $widget   Widget object.
+ * @param array       $args     Sidebar arguments.
+ * @return array|false
+ */
+function kratom_feed_hide_core_recent_posts_widget( $instance, $widget, $args ) {
+	if (
+		! empty( $args['id'] )
+		&& 'sidebar-blog' === $args['id']
+		&& isset( $widget->id_base )
+		&& 'recent-posts' === $widget->id_base
+	) {
+		return false;
+	}
+
+	return $instance;
+}
+add_filter( 'widget_display_callback', 'kratom_feed_hide_core_recent_posts_widget', 10, 3 );
+
+/**
  * Enqueue scripts and styles.
  */
 function kratom_feed_scripts() {
@@ -216,6 +239,7 @@ function kratom_feed_load_carbon_fields() {
 add_action( 'after_setup_theme', 'kratom_feed_load_carbon_fields', 5 );
 
 require_once KRATOM_FEED_DIR . '/inc/template-functions.php';
+require_once KRATOM_FEED_DIR . '/inc/quiz.php';
 
 if ( file_exists( KRATOM_FEED_DIR . '/vendor/autoload.php' ) ) {
 	require_once KRATOM_FEED_DIR . '/inc/carbon-fields.php';
