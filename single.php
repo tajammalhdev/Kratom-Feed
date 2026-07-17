@@ -15,7 +15,7 @@ if ( have_posts() ) :
 		?>
 <main id="main-content">
 	<header class="bg-pg-black">
-		<div class="pg-container py-8 md:py-12">
+		<div class="container py-8 md:py-12">
 			<nav aria-label="<?php esc_attr_e( 'Breadcrumb', 'kratom-feed' ); ?>" class="mb-4 text-sm text-gray-400">
 				<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="hover:text-pg-lime"><?php esc_html_e( 'Home', 'kratom-feed' ); ?></a>
 				<?php if ( $primary_cat ) : ?>
@@ -36,20 +36,20 @@ if ( have_posts() ) :
 			</div>
 		</div>
 		<?php if ( has_post_thumbnail() ) : ?>
-		<div class="pg-container pb-8">
+		<div class="container pb-8">
 			<?php the_post_thumbnail( 'full', array( 'class' => 'w-full rounded-2xl object-cover shadow-2xl aspect-[21/9]' ) ); ?>
 		</div>
 		<?php endif; ?>
 	</header>
 
 	<div class="border-b border-pg-border bg-pg-gray-light lg:hidden">
-		<div class="pg-container py-4">
+		<div class="container py-4">
 			<button id="mobile-toc-toggle" type="button" class="flex w-full items-center justify-between rounded-xl border border-pg-border bg-white px-4 py-3 text-sm font-bold uppercase cursor-pointer" aria-expanded="false" aria-controls="mobile-toc"><?php esc_html_e( 'On this page', 'kratom-feed' ); ?> <span>v</span></button>
 			<nav id="mobile-toc" class="mt-2 hidden rounded-xl border border-pg-border bg-white p-4" aria-label="<?php esc_attr_e( 'Table of contents', 'kratom-feed' ); ?>"></nav>
 		</div>
 	</div>
 
-	<div class="pg-container py-12">
+	<div class="container py-12">
 		<div class="grid gap-12 lg:grid-cols-[220px_1fr_300px]">
 			<aside class="hidden lg:block" aria-label="<?php esc_attr_e( 'Table of contents', 'kratom-feed' ); ?>">
 				<nav id="desktop-toc" class="sticky top-28 space-y-1">

@@ -32,6 +32,156 @@ function kratom_feed_image_url( $image_id, $size = 'large' ) {
 }
 
 /**
+ * Allowed HTML for inline SVG icons from theme options.
+ *
+ * @return array
+ */
+function kratom_feed_allowed_svg_html() {
+	$svg_attrs = array(
+		'class'             => true,
+		'id'                => true,
+		'width'             => true,
+		'height'            => true,
+		'viewbox'           => true,
+		'fill'              => true,
+		'stroke'            => true,
+		'stroke-width'      => true,
+		'stroke-linecap'    => true,
+		'stroke-linejoin'   => true,
+		'stroke-dasharray'  => true,
+		'stroke-dashoffset' => true,
+		'xmlns'             => true,
+		'xmlns:xlink'       => true,
+		'aria-hidden'       => true,
+		'role'              => true,
+		'focusable'         => true,
+		'style'             => true,
+		'transform'         => true,
+		'opacity'           => true,
+		'clip-rule'         => true,
+		'fill-rule'         => true,
+		'fill-opacity'      => true,
+		'stroke-opacity'    => true,
+		'd'                 => true,
+		'cx'                => true,
+		'cy'                => true,
+		'r'                 => true,
+		'rx'                => true,
+		'ry'                => true,
+		'x'                 => true,
+		'y'                 => true,
+		'x1'                => true,
+		'y1'                => true,
+		'x2'                => true,
+		'y2'                => true,
+		'points'            => true,
+		'dx'                => true,
+		'dy'                => true,
+		'offset'            => true,
+		'stop-color'        => true,
+		'stop-opacity'      => true,
+		'gradientunits'     => true,
+		'gradienttransform' => true,
+		'xlink:href'        => true,
+		'href'              => true,
+		'clip-path'         => true,
+		'mask'              => true,
+		'filter'            => true,
+	);
+
+	return array(
+		'svg'      => $svg_attrs,
+		'g'        => $svg_attrs,
+		'path'     => $svg_attrs,
+		'circle'   => $svg_attrs,
+		'ellipse'  => $svg_attrs,
+		'rect'     => $svg_attrs,
+		'line'     => $svg_attrs,
+		'polyline' => $svg_attrs,
+		'polygon'  => $svg_attrs,
+		'defs'     => $svg_attrs,
+		'clippath' => $svg_attrs,
+		'mask'     => $svg_attrs,
+		'use'      => $svg_attrs,
+		'symbol'   => $svg_attrs,
+		'title'    => array(),
+		'desc'     => array(),
+		'lineargradient' => $svg_attrs,
+		'radialgradient' => $svg_attrs,
+		'stop'     => $svg_attrs,
+	);
+}
+
+/**
+ * Sanitize SVG markup for safe front-end output.
+ *
+ * @param string $svg Raw SVG markup.
+ * @return string
+ */
+function kratom_feed_sanitize_svg( $svg ) {
+	$svg = trim( (string) $svg );
+	if ( '' === $svg || false === stripos( $svg, '<svg' ) ) {
+		return '';
+	}
+	// Strip XML/DOCTYPE and scripts.
+	$svg = preg_replace( '/<\?xml.*?\?>/i', '', $svg );
+	$svg = preg_replace( '/<!DOCTYPE.*?>/i', '', $svg );
+	$svg = preg_replace( '/<script\b[^>]*>.*?<\/script>/is', '', $svg );
+	$svg = preg_replace( '/on\w+\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]+)/i', '', $svg );
+	return wp_kses( $svg, kratom_feed_allowed_svg_html() );
+}
+
+/**
+ * Resolve a header CTA icon from upload ID and/or pasted SVG code.
+ * Upload wins when present; SVG file contents are inlined when possible.
+ *
+ * @param int|string $attachment_id Carbon image field value.
+ * @param string     $svg_code      Pasted SVG markup.
+ * @param string     $class         Optional CSS class on wrapper/img.
+ * @return string HTML (escaped/sanitized) or empty string.
+ */
+function kratom_feed_get_cta_icon_html( $attachment_id, $svg_code = '', $class = 'kf-sf-cta__icon h-4 w-4 shrink-0' ) {
+	$attachment_id = absint( $attachment_id );
+
+	if ( $attachment_id ) {
+		$path = get_attached_file( $attachment_id );
+		$mime = get_post_mime_type( $attachment_id );
+
+		if ( $path && is_readable( $path ) && ( 'image/svg+xml' === $mime || 'image/svg' === $mime || preg_match( '/\.svg$/i', $path ) ) ) {
+			$contents = file_get_contents( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+			$sanitized = kratom_feed_sanitize_svg( $contents );
+			if ( $sanitized ) {
+				if ( $class && false === strpos( $sanitized, 'class=' ) ) {
+					$sanitized = preg_replace( '/<svg\b/i', '<svg class="' . esc_attr( $class ) . '"', $sanitized, 1 );
+				}
+				return $sanitized;
+			}
+		}
+
+		$url = wp_get_attachment_image_url( $attachment_id, 'thumbnail' );
+		if ( $url ) {
+			$alt = get_post_meta( $attachment_id, '_wp_attachment_image_alt', true );
+			return sprintf(
+				'<img src="%s" alt="%s" class="%s" width="16" height="16" loading="lazy" decoding="async" />',
+				esc_url( $url ),
+				esc_attr( $alt ? $alt : '' ),
+				esc_attr( $class )
+			);
+		}
+	}
+
+	$from_code = kratom_feed_sanitize_svg( $svg_code );
+	if ( $from_code ) {
+		if ( $class && false === strpos( $from_code, 'class=' ) ) {
+			$from_code = preg_replace( '/<svg\b/i', '<svg class="' . esc_attr( $class ) . '"', $from_code, 1 );
+		}
+		return $from_code;
+	}
+
+	return '';
+}
+
+/**
  * Render page builder for current post.
  */
 function kratom_feed_render_page_builder( $post_id = null ) {
@@ -40,6 +190,9 @@ function kratom_feed_render_page_builder( $post_id = null ) {
 
 /**
  * Render builder sections for a post.
+ *
+ * @param int $post_id Page ID.
+ * @return string
  */
 function kratom_feed_render_builder_sections_for_post( $post_id ) {
 	$post_id = absint( $post_id );
@@ -53,6 +206,7 @@ function kratom_feed_render_builder_sections_for_post( $post_id ) {
 	}
 
 	ob_start();
+	echo '<div class="kf-builder  py-6 sm:py-8 lg:py-10">';
 	foreach ( $sections as $section ) {
 		$section_type = isset( $section['_type'] ) ? $section['_type'] : '';
 		if ( ! $section_type ) {
@@ -67,12 +221,16 @@ function kratom_feed_render_builder_sections_for_post( $post_id ) {
 		$section_data = $section;
 		include $template_path;
 	}
+	echo '</div>';
 
 	return ob_get_clean();
 }
 
 /**
  * Get builder content with fallback to post content.
+ *
+ * @param int $post_id Page ID.
+ * @return string
  */
 function kratom_feed_get_builder_content( $post_id ) {
 	$post_id = absint( $post_id );
@@ -82,7 +240,7 @@ function kratom_feed_get_builder_content( $post_id ) {
 
 	if ( function_exists( 'carbon_get_post_meta' ) && carbon_get_post_meta( $post_id, 'use_page_builder' ) ) {
 		$output = kratom_feed_render_builder_sections_for_post( $post_id );
-		if ( $output !== '' ) {
+		if ( '' !== $output ) {
 			return $output;
 		}
 	}
@@ -93,6 +251,80 @@ function kratom_feed_get_builder_content( $post_id ) {
 	}
 
 	return apply_filters( 'the_content', $post->post_content );
+}
+
+/**
+ * Resolve posts for hero featured section.
+ *
+ * @param array $association Carbon association value.
+ * @return WP_Post[]
+ */
+function kratom_feed_resolve_featured_posts( $association = array() ) {
+	$ids = array();
+	if ( ! empty( $association ) && is_array( $association ) ) {
+		foreach ( $association as $item ) {
+			if ( ! empty( $item['id'] ) ) {
+				$ids[] = (int) $item['id'];
+			}
+		}
+		$ids = array_values( array_unique( $ids ) );
+	}
+
+	if ( $ids ) {
+		return get_posts(
+			array(
+				'post_type'           => 'post',
+				'post_status'         => 'publish',
+				'post__in'            => $ids,
+				'orderby'             => 'post__in',
+				'posts_per_page'      => count( $ids ),
+				'ignore_sticky_posts' => true,
+			)
+		);
+	}
+
+	return get_posts(
+		array(
+			'post_type'           => 'post',
+			'post_status'         => 'publish',
+			'posts_per_page'      => 12,
+			'ignore_sticky_posts' => true,
+			'meta_query'          => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				array(
+					'key'     => '_is_featured',
+					'value'   => 'yes',
+					'compare' => '=',
+				),
+			),
+		)
+	);
+}
+
+/**
+ * Compact number for engagement counts (e.g. 2200 -> 2.2k).
+ *
+ * @param int $number Count.
+ * @return string
+ */
+function kratom_feed_format_count( $number ) {
+	$number = absint( $number );
+	if ( $number >= 1000000 ) {
+		return rtrim( rtrim( number_format( $number / 1000000, 1 ), '0' ), '.' ) . 'm';
+	}
+	if ( $number >= 1000 ) {
+		return rtrim( rtrim( number_format( $number / 1000, 1 ), '0' ), '.' ) . 'k';
+	}
+	return (string) $number;
+}
+
+/**
+ * Get like count for a post.
+ *
+ * @param int $post_id Post ID.
+ * @return int
+ */
+function kratom_feed_get_like_count( $post_id ) {
+	return absint( get_post_meta( absint( $post_id ), 'kf_like_count', true ) );
 }
 
 /**
@@ -119,69 +351,9 @@ function kratom_feed_compact_number( $number ) {
 }
 
 /**
- * Category badge text color class for mosaic cards.
- */
-function kratom_feed_category_badge_class( $label = '' ) {
-	$palette = array(
-		'text-orange-500',
-		'text-rose-500',
-		'text-emerald-500',
-		'text-teal-700',
-		'text-sky-600',
-		'text-violet-600',
-		'text-amber-600',
-	);
-	$index = $label ? ( abs( crc32( strtolower( $label ) ) ) % count( $palette ) ) : 0;
-	return $palette[ $index ];
-}
-
-/**
- * Resolve association field items or query latest posts.
- *
- * @param array  $association Carbon association value.
- * @param int    $count       Max posts.
- * @param string $category    Optional category ID.
- * @return WP_Post[]
- */
-function kratom_feed_resolve_posts( $association, $count = 4, $category = '' ) {
-	$ids = array();
-	if ( ! empty( $association ) && is_array( $association ) ) {
-		foreach ( $association as $item ) {
-			if ( ! empty( $item['id'] ) ) {
-				$ids[] = (int) $item['id'];
-			}
-		}
-		$ids = array_slice( array_unique( $ids ), 0, $count );
-	}
-
-	if ( $ids ) {
-		$posts = get_posts(
-			array(
-				'post_type'           => 'post',
-				'post_status'         => 'publish',
-				'post__in'            => $ids,
-				'orderby'             => 'post__in',
-				'posts_per_page'      => $count,
-				'ignore_sticky_posts' => true,
-			)
-		);
-		return $posts;
-	}
-
-	$args = array(
-		'post_type'           => 'post',
-		'post_status'         => 'publish',
-		'posts_per_page'      => $count,
-		'ignore_sticky_posts' => true,
-	);
-	if ( $category ) {
-		$args['cat'] = (int) $category;
-	}
-	return get_posts( $args );
-}
-
-/**
  * Blog categories for Carbon select fields.
+ *
+ * @return array<string, string>
  */
 function kratom_feed_get_blog_categories() {
 	$choices = array( '' => __( 'All categories', 'kratom-feed' ) );
@@ -190,6 +362,26 @@ function kratom_feed_get_blog_categories() {
 		$choices[ (string) $term->term_id ] = $term->name;
 	}
 	return $choices;
+}
+
+/**
+ * Query posts for the Posts by Category builder section.
+ *
+ * @param string|int $category_id Category term ID or empty.
+ * @param int        $count       Number of posts.
+ * @return WP_Post[]
+ */
+function kratom_feed_query_posts_by_category( $category_id = '', $count = 4 ) {
+	$args = array(
+		'post_type'           => 'post',
+		'post_status'         => 'publish',
+		'posts_per_page'      => max( 1, absint( $count ) ),
+		'ignore_sticky_posts' => true,
+	);
+	if ( $category_id ) {
+		$args['cat'] = absint( $category_id );
+	}
+	return get_posts( $args );
 }
 
 /**

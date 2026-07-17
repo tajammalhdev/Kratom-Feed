@@ -12,7 +12,7 @@ $show_chat   = kratom_feed_get_option( 'floating_chat_enabled', true );
 $about_url   = get_permalink( get_page_by_path( 'about' ) ) ?: home_url( '/about/' );
 ?>
 <footer class="border-t border-pg-border bg-pg-black text-white" role="contentinfo">
-	<div class="pg-container py-14">
+	<div class="container py-14">
 		<div class="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
 			<div>
 				<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="flex items-center gap-2">

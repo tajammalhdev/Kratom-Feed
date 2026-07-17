@@ -41,6 +41,32 @@ function kratom_feed_setup_carbon_fields() {
 				->set_default_value( __( 'What Are You Looking For?', 'kratom-feed' ) ),
 			Field::make( 'checkbox', 'header_sticky', __( 'Sticky Header', 'kratom-feed' ) )
 				->set_default_value( true ),
+			Field::make( 'complex', 'header_trending_searches', __( 'Trending Searches', 'kratom-feed' ) )
+				->set_help_text( __( 'Keyword chips under the search field.', 'kratom-feed' ) )
+				->add_fields( array(
+					Field::make( 'text', 'term', __( 'Search Term', 'kratom-feed' ) )->set_required( true ),
+				) )
+				->set_header_template( '<%- term %>' ),
+			Field::make( 'text', 'header_search_pro_tip', __( 'Search Pro Tip', 'kratom-feed' ) )
+				->set_default_value( __( 'Try searching by strain, topic, or vendor name.', 'kratom-feed' ) ),
+			Field::make( 'text', 'header_cta_1_label', __( 'CTA 1 Label', 'kratom-feed' ) )
+				->set_default_value( __( 'Blog', 'kratom-feed' ) ),
+			Field::make( 'text', 'header_cta_1_url', __( 'CTA 1 URL', 'kratom-feed' ) )
+				->set_default_value( '/blog/' ),
+			Field::make( 'file', 'header_cta_1_icon', __( 'CTA 1 Icon (SVG upload)', 'kratom-feed' ) )
+				->set_help_text( __( 'Upload an SVG (preferred) or image. Used if set; otherwise the SVG code below is used.', 'kratom-feed' ) ),
+			Field::make( 'textarea', 'header_cta_1_svg', __( 'CTA 1 SVG Code', 'kratom-feed' ) )
+				->set_rows( 4 )
+				->set_help_text( __( 'Paste raw SVG markup (e.g. &lt;svg&gt;…&lt;/svg&gt;). Ignored if an icon is uploaded above.', 'kratom-feed' ) ),
+			Field::make( 'text', 'header_cta_2_label', __( 'CTA 2 Label', 'kratom-feed' ) )
+				->set_default_value( __( 'Subscribe', 'kratom-feed' ) ),
+			Field::make( 'text', 'header_cta_2_url', __( 'CTA 2 URL', 'kratom-feed' ) )
+				->set_default_value( '#newsletter' ),
+			Field::make( 'file', 'header_cta_2_icon', __( 'CTA 2 Icon (SVG upload)', 'kratom-feed' ) )
+				->set_help_text( __( 'Upload an SVG (preferred) or image. Used if set; otherwise the SVG code below is used.', 'kratom-feed' ) ),
+			Field::make( 'textarea', 'header_cta_2_svg', __( 'CTA 2 SVG Code', 'kratom-feed' ) )
+				->set_rows( 4 )
+				->set_help_text( __( 'Paste raw SVG markup (e.g. &lt;svg&gt;…&lt;/svg&gt;). Ignored if an icon is uploaded above.', 'kratom-feed' ) ),
 		) )
 		->add_tab( __( 'Footer', 'kratom-feed' ), array(
 			Field::make( 'textarea', 'footer_tagline', __( 'Footer Tagline', 'kratom-feed' ) )
@@ -67,9 +93,19 @@ function kratom_feed_setup_carbon_fields() {
 				->set_default_value( true ),
 		) );
 
-	// --- Page Builder (Pages + Block Snippets) -----------------------
+	// --- Featured flag on posts (WooCommerce-style) -------------------
+	Container::make( 'post_meta', __( 'Featured', 'kratom-feed' ) )
+		->where( 'post_type', '=', 'post' )
+		->set_context( 'side' )
+		->set_priority( 'high' )
+		->add_fields( array(
+			Field::make( 'checkbox', 'is_featured', __( 'Featured', 'kratom-feed' ) )
+				->set_help_text( __( 'Show this post in the Hero Featured carousel when no posts are manually selected.', 'kratom-feed' ) ),
+		) );
+
+	// --- Page Builder -------------------------------------------------
 	Container::make( 'post_meta', __( 'Page Builder', 'kratom-feed' ) )
-		->where( 'post_type', 'IN', array( 'page', 'lumen_block_snippet' ) )
+		->where( 'post_type', '=', 'page' )
 		->add_fields( array(
 			Field::make( 'checkbox', 'use_page_builder', __( 'Use Page Builder', 'kratom-feed' ) )
 				->set_help_text( __( 'Enable custom builder sections instead of the default editor content.', 'kratom-feed' ) ),
@@ -84,191 +120,136 @@ function kratom_feed_setup_carbon_fields() {
 					array( 'field' => 'use_page_builder', 'value' => true ),
 				) )
 
-				// Hero Featured
-				->add_fields( 'hero_carousel', __( 'Hero Featured', 'kratom-feed' ), array(
-					Field::make( 'association', 'featured_post', __( 'Featured Post', 'kratom-feed' ) )
+				->add_fields( 'hero_featured', __( 'Hero Featured', 'kratom-feed' ), array(
+					Field::make( 'checkbox', 'show_live_badge', __( 'Show Live Badge', 'kratom-feed' ) )
+						->set_default_value( true ),
+					Field::make( 'text', 'live_badge_text', __( 'Live Badge Text', 'kratom-feed' ) )
+						->set_default_value( __( 'Live Updates', 'kratom-feed' ) )
+						->set_conditional_logic( array(
+							array( 'field' => 'show_live_badge', 'value' => true ),
+						) ),
+					Field::make( 'association', 'posts', __( 'Featured Posts', 'kratom-feed' ) )
 						->set_types( array(
 							array(
 								'type'      => 'post',
 								'post_type' => 'post',
 							),
 						) )
-						->set_max( 1 )
-						->set_help_text( __( 'Leave empty to use the latest published post.', 'kratom-feed' ) ),
-					Field::make( 'select', 'category', __( 'Category Filter', 'kratom-feed' ) )
-						->set_options( 'kratom_feed_get_blog_categories' ),
-					Field::make( 'text', 'grid_count', __( 'Grid Posts Count', 'kratom-feed' ) )
+						->set_help_text( __( 'Optional. Leave empty to auto-load posts marked Featured. One post = single hero; multiple = carousel.', 'kratom-feed' ) ),
+					Field::make( 'checkbox', 'autoplay', __( 'Autoplay Carousel', 'kratom-feed' ) )
+						->set_default_value( true ),
+					Field::make( 'text', 'autoplay_ms', __( 'Autoplay Interval (ms)', 'kratom-feed' ) )
 						->set_attribute( 'type', 'number' )
-						->set_default_value( '6' )
-						->set_help_text( __( 'Number of posts in the right-hand grid (default 6).', 'kratom-feed' ) ),
+						->set_default_value( '6000' )
+						->set_conditional_logic( array(
+							array( 'field' => 'autoplay', 'value' => true ),
+						) ),
 				) )
 
-				// Featured Mosaic (Ncmaz-style)
-				->add_fields( 'featured_mosaic', __( 'Featured Mosaic', 'kratom-feed' ), array(
-					Field::make( 'association', 'posts', __( 'Posts', 'kratom-feed' ) )
-						->set_types( array(
-							array(
-								'type'      => 'post',
-								'post_type' => 'post',
-							),
-						) )
-						->set_max( 4 )
-						->set_help_text( __( 'Pick up to 4 posts. Order: top-left, top-middle, bottom-wide, right-tall. Leave empty to use the latest 4 posts.', 'kratom-feed' ) ),
-					Field::make( 'select', 'category', __( 'Category Filter', 'kratom-feed' ) )
-						->set_options( 'kratom_feed_get_blog_categories' )
-						->set_help_text( __( 'Used when posts are not manually selected.', 'kratom-feed' ) ),
-					Field::make( 'checkbox', 'show_engagement', __( 'Show likes & comments on tall card', 'kratom-feed' ) )
-						->set_default_value( true ),
-					Field::make( 'checkbox', 'show_play_badge', __( 'Show play badge on left cards', 'kratom-feed' ) )
-						->set_default_value( true ),
-				) )
-
-				// Trust + Reviews
-				->add_fields( 'trust_reviews', __( 'Trust & Reviews', 'kratom-feed' ), array(
-					Field::make( 'text', 'heading_before', __( 'Heading (before highlight)', 'kratom-feed' ) )
-						->set_default_value( 'Best Place to buy' ),
-					Field::make( 'text', 'heading_highlight', __( 'Heading Highlight', 'kratom-feed' ) )
-						->set_default_value( 'Kratom Online' ),
-					Field::make( 'text', 'heading_after', __( 'Heading (after highlight)', 'kratom-feed' ) )
-						->set_default_value( 'in Canada' ),
-					Field::make( 'textarea', 'subtitle', __( 'Subtitle', 'kratom-feed' ) ),
-					Field::make( 'text', 'rating', __( 'Rating', 'kratom-feed' ) )
-						->set_default_value( '4.8' ),
-					Field::make( 'text', 'reviews_label', __( 'Reviews Link Text', 'kratom-feed' ) )
-						->set_default_value( '1000 reviews' ),
-					Field::make( 'complex', 'reviews', __( 'Reviews', 'kratom-feed' ) )
+				->add_fields( 'trending_categories', __( 'Trending Categories', 'kratom-feed' ), array(
+					Field::make( 'text', 'title', __( 'Title', 'kratom-feed' ) )
+						->set_default_value( __( "What's trending:", 'kratom-feed' ) ),
+					Field::make( 'file', 'title_icon', __( 'Title Icon (SVG upload)', 'kratom-feed' ) )
+						->set_help_text( __( 'Optional icon next to the title. Upload wins over SVG code below.', 'kratom-feed' ) ),
+					Field::make( 'textarea', 'title_svg', __( 'Title SVG Code', 'kratom-feed' ) )
+						->set_rows( 3 )
+						->set_help_text( __( 'Paste raw SVG markup if not uploading a file.', 'kratom-feed' ) ),
+					Field::make( 'complex', 'items', __( 'Categories', 'kratom-feed' ) )
 						->add_fields( array(
-							Field::make( 'image', 'avatar', __( 'Avatar', 'kratom-feed' ) ),
-							Field::make( 'text', 'name', __( 'Name', 'kratom-feed' ) )->set_required( true ),
-							Field::make( 'textarea', 'text', __( 'Review Text', 'kratom-feed' ) )->set_required( true ),
-							Field::make( 'text', 'date', __( 'Date', 'kratom-feed' ) ),
+							Field::make( 'text', 'label', __( 'Label', 'kratom-feed' ) )->set_required( true ),
+							Field::make( 'text', 'url', __( 'URL', 'kratom-feed' ) ),
+							Field::make( 'file', 'icon', __( 'Icon (SVG upload)', 'kratom-feed' ) ),
+							Field::make( 'textarea', 'svg_code', __( 'SVG Code', 'kratom-feed' ) )
+								->set_rows( 3 ),
 						) )
+						->set_header_template( '<%- label %>' )
 						->set_min( 1 ),
 				) )
 
-				// Categories Grid (Ncmaz trending topics style)
-				->add_fields( 'categories_grid', __( 'Categories Grid', 'kratom-feed' ), array(
-					Field::make( 'text', 'title', __( 'Section Title', 'kratom-feed' ) )
-						->set_default_value( 'Top trending topics' ),
-					Field::make( 'textarea', 'subtitle', __( 'Subtitle', 'kratom-feed' ) )
-						->set_default_value( 'Explore the most popular categories' ),
-					Field::make( 'checkbox', 'show_rank_badges', __( 'Show #1 #2 #3 badges on first three cards', 'kratom-feed' ) )
+				->add_fields( 'posts_by_category', __( 'Posts by Category', 'kratom-feed' ), array(
+					Field::make( 'select', 'style', __( 'Choose Style', 'kratom-feed' ) )
+						->set_options( array(
+							'style_1' => __( 'Style 1 — Horizontal cards', 'kratom-feed' ),
+							'style_2' => __( 'Style 2 — Latest Articles', 'kratom-feed' ),
+						) )
+						->set_default_value( 'style_1' ),
+					Field::make( 'text', 'title', __( 'Title', 'kratom-feed' ) )
+						->set_default_value( __( 'Learn With Kratom Feed', 'kratom-feed' ) ),
+					Field::make( 'textarea', 'description', __( 'Description', 'kratom-feed' ) )
+						->set_rows( 4 )
+						->set_default_value( __( 'Explore a growing library of carefully researched articles, expert guides, and community insights designed to help you understand kratom better.', 'kratom-feed' ) ),
+					Field::make( 'file', 'icon', __( 'Icon (SVG / image upload)', 'kratom-feed' ) )
+						->set_help_text( __( 'Shown next to the title. Upload wins over SVG code below.', 'kratom-feed' ) ),
+					Field::make( 'textarea', 'icon_svg', __( 'Icon SVG Code', 'kratom-feed' ) )
+						->set_rows( 3 ),
+					Field::make( 'select', 'category', __( 'Category', 'kratom-feed' ) )
+						->set_options( 'kratom_feed_get_blog_categories' )
+						->set_help_text( __( 'Leave as All categories to show the latest posts from any category.', 'kratom-feed' ) ),
+					Field::make( 'text', 'posts_per_page', __( 'Number of Posts', 'kratom-feed' ) )
+						->set_attribute( 'type', 'number' )
+						->set_default_value( '4' ),
+					Field::make( 'checkbox', 'show_button', __( 'Enable Button', 'kratom-feed' ) )
 						->set_default_value( true ),
-					Field::make( 'checkbox', 'show_button', __( 'Show section button (optional)', 'kratom-feed' ) )
-						->set_default_value( false )
-						->set_help_text( __( 'Leave off unless you need a CTA next to the heading.', 'kratom-feed' ) ),
 					Field::make( 'text', 'button_text', __( 'Button Text', 'kratom-feed' ) )
+						->set_default_value( __( 'Discover More', 'kratom-feed' ) )
 						->set_conditional_logic( array(
 							array( 'field' => 'show_button', 'value' => true ),
 						) ),
 					Field::make( 'text', 'button_url', __( 'Button URL', 'kratom-feed' ) )
+						->set_default_value( '/blog/' )
 						->set_conditional_logic( array(
 							array( 'field' => 'show_button', 'value' => true ),
 						) ),
-					Field::make( 'complex', 'categories', __( 'Categories', 'kratom-feed' ) )
-						->add_fields( array(
-							Field::make( 'image', 'icon', __( 'Image', 'kratom-feed' ) )
-								->set_help_text( __( 'Shown as a circular thumbnail.', 'kratom-feed' ) ),
-							Field::make( 'text', 'label', __( 'Label', 'kratom-feed' ) )->set_required( true ),
-							Field::make( 'text', 'url', __( 'URL', 'kratom-feed' ) ),
-							Field::make( 'select', 'wp_category', __( 'WordPress Category (optional)', 'kratom-feed' ) )
-								->set_options( 'kratom_feed_get_blog_categories' )
-								->set_help_text( __( 'Used to auto-fill article count. URL still set manually above if needed.', 'kratom-feed' ) ),
-							Field::make( 'text', 'count_label', __( 'Article count override', 'kratom-feed' ) )
-								->set_help_text( __( 'Optional. e.g. "13 articles". Leave empty to use the WordPress category count.', 'kratom-feed' ) ),
-						) )
-						->set_min( 1 ),
 				) )
 
-				// Blog Posts
-				->add_fields( 'blog_posts', __( 'Blog Posts', 'kratom-feed' ), array(
-					Field::make( 'text', 'title', __( 'Section Title', 'kratom-feed' ) )
-						->set_default_value( "Editor's Picks" ),
-					Field::make( 'textarea', 'subtitle', __( 'Subtitle', 'kratom-feed' ) ),
-					Field::make( 'text', 'link_text', __( 'View All Link Text', 'kratom-feed' ) )
-						->set_default_value( 'View All Articles' ),
-					Field::make( 'text', 'link_url', __( 'View All URL', 'kratom-feed' ) ),
-					Field::make( 'select', 'layout', __( 'Layout', 'kratom-feed' ) )
-						->set_options( array(
-							'grid'       => __( 'Grid (4 columns)', 'kratom-feed' ),
-							'horizontal' => __( 'Horizontal scroll', 'kratom-feed' ),
-						) )
-						->set_default_value( 'horizontal' ),
-					Field::make( 'text', 'posts_per_page', __( 'Posts Per Page', 'kratom-feed' ) )
-						->set_attribute( 'type', 'number' )
-						->set_default_value( '4' ),
-					Field::make( 'select', 'category', __( 'Category Filter', 'kratom-feed' ) )
-						->set_options( 'kratom_feed_get_blog_categories' ),
-					Field::make( 'select', 'background', __( 'Background', 'kratom-feed' ) )
-						->set_options( array(
-							'gray'  => __( 'Light gray', 'kratom-feed' ),
-							'white' => __( 'White', 'kratom-feed' ),
-						) )
-						->set_default_value( 'gray' ),
-				) )
-
-				// Newsletter
-				->add_fields( 'newsletter_signup', __( 'Newsletter Signup', 'kratom-feed' ), array(
-					Field::make( 'text', 'heading', __( 'Heading', 'kratom-feed' ) ),
-					Field::make( 'textarea', 'description', __( 'Description', 'kratom-feed' ) ),
-					Field::make( 'complex', 'bullets', __( 'Bullet Points', 'kratom-feed' ) )
-						->add_fields( array(
-							Field::make( 'text', 'text', __( 'Text', 'kratom-feed' ) ),
-						) ),
-					Field::make( 'text', 'badge_text', __( 'Card Badge Text', 'kratom-feed' ) )
-						->set_default_value( 'Free Guide Active' ),
-					Field::make( 'text', 'fine_print', __( 'Fine Print', 'kratom-feed' ) ),
-				) )
-
-				// Vein Types
-				->add_fields( 'vein_types', __( 'Vein Types', 'kratom-feed' ), array(
-					Field::make( 'text', 'title', __( 'Section Title', 'kratom-feed' ) )
-						->set_default_value( 'Know which vein type is best for you!' ),
-					Field::make( 'complex', 'cards', __( 'Cards', 'kratom-feed' ) )
-						->add_fields( array(
-							Field::make( 'image', 'image', __( 'Image', 'kratom-feed' ) ),
-							Field::make( 'text', 'title', __( 'Title', 'kratom-feed' ) )->set_required( true ),
-							Field::make( 'textarea', 'description', __( 'Description', 'kratom-feed' ) ),
-							Field::make( 'text', 'url', __( 'URL', 'kratom-feed' ) ),
-						) )
-						->set_min( 1 ),
-				) )
-
-				// Rich Text
-				->add_fields( 'rich_text', __( 'Rich Text', 'kratom-feed' ), array(
-					Field::make( 'text', 'title', __( 'Title', 'kratom-feed' ) ),
-					Field::make( 'rich_text', 'content', __( 'Content', 'kratom-feed' ) ),
-					Field::make( 'select', 'background', __( 'Background', 'kratom-feed' ) )
-						->set_options( array(
-							'white' => __( 'White', 'kratom-feed' ),
-							'gray'  => __( 'Light gray', 'kratom-feed' ),
-						) )
-						->set_default_value( 'white' ),
-				) )
-
-				// FAQ Accordion
-				->add_fields( 'faq_accordion', __( 'FAQ Accordion', 'kratom-feed' ), array(
+				->add_fields( 'category_spotlight', __( 'Category Spotlight', 'kratom-feed' ), array(
 					Field::make( 'text', 'title', __( 'Title', 'kratom-feed' ) )
-						->set_default_value( 'Questions? Bring them all!' ),
-					Field::make( 'textarea', 'subtitle', __( 'Subtitle', 'kratom-feed' ) ),
-					Field::make( 'complex', 'items', __( 'FAQ Items', 'kratom-feed' ) )
-						->add_fields( array(
-							Field::make( 'text', 'question', __( 'Question', 'kratom-feed' ) )->set_required( true ),
-							Field::make( 'textarea', 'answer', __( 'Answer', 'kratom-feed' ) )->set_required( true ),
-						) )
-						->set_min( 1 ),
+						->set_default_value( __( 'Safety & Basics', 'kratom-feed' ) ),
+					Field::make( 'textarea', 'description', __( 'Description', 'kratom-feed' ) )
+						->set_rows( 4 )
+						->set_default_value( __( 'Explore the most popular kratom articles, in-depth guides, expert tips, and breaking industry news—all in one place.', 'kratom-feed' ) ),
+					Field::make( 'file', 'icon', __( 'Icon (SVG / image upload)', 'kratom-feed' ) )
+						->set_help_text( __( 'Shown next to the title. Upload wins over SVG code below.', 'kratom-feed' ) ),
+					Field::make( 'textarea', 'icon_svg', __( 'Icon SVG Code', 'kratom-feed' ) )
+						->set_rows( 3 ),
+					Field::make( 'select', 'category', __( 'Category', 'kratom-feed' ) )
+						->set_options( 'kratom_feed_get_blog_categories' )
+						->set_help_text( __( 'Posts are fetched from this category. First post is featured; the rest appear in the side list.', 'kratom-feed' ) ),
+					Field::make( 'text', 'posts_per_page', __( 'Number of Posts', 'kratom-feed' ) )
+						->set_attribute( 'type', 'number' )
+						->set_default_value( '6' )
+						->set_help_text( __( 'Total posts (2 featured + 4 in the list). Recommended: 6.', 'kratom-feed' ) ),
+					Field::make( 'checkbox', 'show_button', __( 'Enable Button', 'kratom-feed' ) )
+						->set_default_value( true ),
+					Field::make( 'text', 'button_text', __( 'Button Text', 'kratom-feed' ) )
+						->set_default_value( __( 'Discover More', 'kratom-feed' ) )
+						->set_conditional_logic( array(
+							array( 'field' => 'show_button', 'value' => true ),
+						) ),
+					Field::make( 'text', 'button_url', __( 'Button URL', 'kratom-feed' ) )
+						->set_default_value( '/blog/' )
+						->set_conditional_logic( array(
+							array( 'field' => 'show_button', 'value' => true ),
+						) ),
 				) )
 
-				// Block Snippet embed
-				->add_fields( 'block_snippet', __( 'Block Snippet', 'kratom-feed' ), array(
-					Field::make( 'association', 'snippet', __( 'Snippet', 'kratom-feed' ) )
-						->set_types( array(
-							array(
-								'type'      => 'post',
-								'post_type' => 'lumen_block_snippet',
-							),
-						) )
-						->set_max( 1 ),
+				->add_fields( 'newsletter', __( 'Newsletter', 'kratom-feed' ), array(
+					Field::make( 'text', 'section_id', __( 'Section ID', 'kratom-feed' ) )
+						->set_default_value( 'newsletter' )
+						->set_help_text( __( 'Used for links such as #newsletter.', 'kratom-feed' ) ),
+					Field::make( 'image', 'background_image', __( 'Background Image', 'kratom-feed' ) )
+						->set_value_type( 'id' )
+						->set_help_text( __( 'Use a dark botanical image for the Figma layout.', 'kratom-feed' ) ),
+					Field::make( 'text', 'heading_top', __( 'Heading — First Line', 'kratom-feed' ) )
+						->set_default_value( __( 'Never Miss a', 'kratom-feed' ) ),
+					Field::make( 'text', 'heading_accent', __( 'Heading — Green Line', 'kratom-feed' ) )
+						->set_default_value( __( 'Kratom Update', 'kratom-feed' ) ),
+					Field::make( 'textarea', 'description', __( 'Description', 'kratom-feed' ) )
+						->set_rows( 5 )
+						->set_default_value( __( 'Stay ahead with the latest developments in the world of kratom. From newly released strains and updated vendor rankings to research summaries, industry news, and expert insights, we curate the information that matters most.', 'kratom-feed' ) ),
+					Field::make( 'text', 'form_heading', __( 'Signup Panel Heading', 'kratom-feed' ) )
+						->set_default_value( __( 'Join Our Kratom Newsletter', 'kratom-feed' ) )
+						->set_help_text( __( 'The Omnisend signup form will be connected to the reserved panel later.', 'kratom-feed' ) ),
 				) ),
 		) );
 }

@@ -15,7 +15,7 @@ while ( have_posts() ) :
 		kratom_feed_render_page_builder();
 	} else {
 		?>
-		<div class="pg-container py-12">
+		<div class="container py-12">
 			<h1 class="text-3xl font-bold uppercase text-gray-900 md:text-5xl"><?php the_title(); ?></h1>
 			<div class="pg-prose mt-8 max-w-prose"><?php the_content(); ?></div>
 		</div>
@@ -26,4 +26,3 @@ endwhile;
 </main>
 <?php
 get_footer();
-

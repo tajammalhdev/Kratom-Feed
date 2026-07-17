@@ -13,4 +13,4 @@
 </head>
 <body <?php body_class( 'font-rubik antialiased' ); ?>>
 <?php wp_body_open(); ?>
-<?php get_template_part( 'template-parts/header/site', 'header' ); ?>
+<?php get_template_part( 'template-parts/header/site', 'header-storefront' ); ?>

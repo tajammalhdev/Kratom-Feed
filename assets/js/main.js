@@ -14,192 +14,6 @@
     fn();
   }
 
-  function initMobileNav() {
-    const header = document.getElementById("site-header");
-    const btn = document.getElementById("mobile-menu-btn");
-    const menu = document.getElementById("mobile-menu");
-    const overlay = document.getElementById("menu-overlay");
-    if (!btn || !menu || !header) return;
-
-    let on = false;
-    let locked = false;
-
-    const setOpen = (v) => {
-      if (locked || on === v) return;
-      on = v;
-      locked = true;
-
-      if (v) window.kratomFeedCloseSearch?.();
-
-      header.classList.toggle("is-open", v);
-      btn.classList.toggle("is-open", v);
-      menu.classList.toggle("is-open", v);
-      overlay?.classList.toggle("is-open", v);
-
-      btn.setAttribute("aria-expanded", String(v));
-      btn.setAttribute("aria-label", v ? "Close menu" : "Open menu");
-      menu.setAttribute("aria-hidden", String(!v));
-      overlay?.setAttribute("aria-hidden", String(!v));
-      document.body.style.overflow = v ? "hidden" : "";
-
-      if (!v) {
-        menu.querySelectorAll(".pg-h-nav__item.is-active").forEach((item) => {
-          item.classList.remove("is-active");
-          item.querySelector(".pg-h-nav__parent")?.setAttribute("aria-expanded", "false");
-        });
-      }
-
-      window.setTimeout(() => {
-        locked = false;
-      }, reduced ? 50 : 500);
-
-      if (!v) btn.focus({ preventScroll: true });
-    };
-
-    btn.addEventListener("click", () => setOpen(!on));
-    overlay?.addEventListener("click", () => setOpen(false));
-
-    menu.querySelectorAll(".pg-h-nav__parent").forEach((parentBtn) => {
-      parentBtn.addEventListener("click", () => {
-        const item = parentBtn.closest(".pg-h-nav__item");
-        if (!item) return;
-        const willOpen = !item.classList.contains("is-active");
-
-        menu.querySelectorAll(".pg-h-nav__item.is-active").forEach((openItem) => {
-          if (openItem !== item) {
-            openItem.classList.remove("is-active");
-            openItem.querySelector(".pg-h-nav__parent")?.setAttribute("aria-expanded", "false");
-          }
-        });
-
-        item.classList.toggle("is-active", willOpen);
-        parentBtn.setAttribute("aria-expanded", String(willOpen));
-      });
-    });
-
-    menu.querySelectorAll(".pg-h-nav__submenu a, .pg-h-nav__link").forEach((a) => {
-      a.addEventListener("click", () => setOpen(false));
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key !== "Escape" || !on) return;
-      if (document.getElementById("search-modal")?.classList.contains("is-open")) return;
-      setOpen(false);
-    });
-
-    window.kratomFeedCloseNav = () => setOpen(false);
-  }
-
-  function initSearchModal() {
-    const modal = document.getElementById("search-modal");
-    const openBtn = document.getElementById("search-modal-open");
-    const closeBtn = document.getElementById("search-modal-close");
-    const overlay = document.getElementById("search-modal-overlay");
-    const input = document.getElementById("modal-search-input");
-    if (!modal || !openBtn) return;
-
-    let open = false;
-
-    const setOpen = (v) => {
-      if (open === v) return;
-      open = v;
-      modal.classList.toggle("is-open", v);
-      modal.setAttribute("aria-hidden", String(!v));
-      openBtn.setAttribute("aria-expanded", String(v));
-      document.body.style.overflow = v ? "hidden" : "";
-
-      if (v) {
-        window.kratomFeedCloseNav?.();
-        window.setTimeout(() => input?.focus({ preventScroll: true }), reduced ? 0 : 80);
-      } else {
-        openBtn.focus({ preventScroll: true });
-      }
-    };
-
-    openBtn.addEventListener("click", () => setOpen(true));
-    closeBtn?.addEventListener("click", () => setOpen(false));
-    overlay?.addEventListener("click", () => setOpen(false));
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && open) setOpen(false);
-    });
-
-    window.kratomFeedCloseSearch = () => setOpen(false);
-  }
-
-  function initSearchRecommendedSwiper() {
-    if (typeof window.Swiper === "undefined") return;
-    document.querySelectorAll(".swiper-popup-search").forEach((el) => {
-      if (el.swiper) return;
-      new window.Swiper(el, {
-        slidesPerView: 1.2,
-        spaceBetween: 16,
-        breakpoints: {
-          640: { slidesPerView: 2.2, spaceBetween: 18 },
-          992: { slidesPerView: 3, spaceBetween: 24 },
-        },
-      });
-    });
-  }
-
-  function initFaq() {
-    document.querySelectorAll(".faq-item").forEach((item) => {
-      const trigger = item.querySelector(".faq-trigger");
-      const panel = item.querySelector(".faq-panel");
-      const icon = item.querySelector(".faq-icon");
-      if (!trigger || !panel) return;
-      trigger.addEventListener("click", () => {
-        const open = trigger.getAttribute("aria-expanded") === "true";
-        document.querySelectorAll(".faq-item").forEach((o) => {
-          o.querySelector(".faq-trigger")?.setAttribute("aria-expanded", "false");
-          o.querySelector(".faq-panel")?.classList.add("hidden");
-          o.querySelector(".faq-icon")?.classList.remove("rotate-180");
-        });
-        if (!open) {
-          trigger.setAttribute("aria-expanded", "true");
-          panel.classList.remove("hidden");
-          icon?.classList.add("rotate-180");
-        }
-      });
-    });
-  }
-
-  function initReviewsCarousel() {
-    const track = document.querySelector(".reviews-track");
-    const slides = document.querySelectorAll(".review-slide");
-    const prev = document.querySelector(".review-prev");
-    const next = document.querySelector(".review-next");
-    if (!track || slides.length < 2) return;
-
-    let idx = 0;
-
-    const getVisibleCount = () => {
-      if (window.innerWidth >= 1024) return 3;
-      if (window.innerWidth >= 640) return 2;
-      return 1;
-    };
-
-    const getMaxIdx = () => Math.max(0, slides.length - getVisibleCount());
-
-    const getStep = () => {
-      const slide = slides[0];
-      if (!slide) return 0;
-      const style = window.getComputedStyle(track);
-      const gap = parseFloat(style.gap) || 16;
-      return slide.offsetWidth + gap;
-    };
-
-    const show = (i) => {
-      idx = Math.max(0, Math.min(i, getMaxIdx()));
-      track.style.transform = `translateX(-${idx * getStep()}px)`;
-    };
-
-    prev?.addEventListener("click", () => show(idx - 1));
-    next?.addEventListener("click", () => show(idx + 1));
-    window.addEventListener("resize", () => show(idx));
-    if (!reduced) setInterval(() => show(idx >= getMaxIdx() ? 0 : idx + 1), 6000);
-  }
-
   function initReadingProgress() {
     const bar = document.getElementById("reading-progress");
     const article = document.getElementById("article-content");
@@ -280,7 +94,7 @@
     const grid = document.getElementById("article-grid");
     if (!grid) return;
     const cards = grid.querySelectorAll("[data-title]");
-    document.querySelectorAll("#modal-search-input, #header-search, #mobile-search, .sidebar-search-input").forEach((input) => {
+    document.querySelectorAll("#header-search, #mobile-search, .sidebar-search-input, #kf-sf-search-input, #kf-sf-search-mobile-input").forEach((input) => {
       input.addEventListener("input", (e) => {
         const q = e.target.value.toLowerCase();
         cards.forEach((c) => { c.style.display = !q || c.dataset.title.toLowerCase().includes(q) ? "" : "none"; });
@@ -288,18 +102,404 @@
     });
   }
 
+  function initStorefrontHeader() {
+    const root = document.querySelector(".kf-header-storefront");
+    if (!root) return;
+
+    const drawer = document.getElementById("kf-sf-drawer");
+    const overlay = document.getElementById("kf-sf-overlay");
+    const openMenuBtn = root.querySelector(".kf-sf-menu-open");
+    const closeMenuBtn = drawer?.querySelector(".kf-sf-drawer__close");
+    const searchWrap = root.querySelector(".kf-sf-search");
+    const searchInput = document.getElementById("kf-sf-search-input");
+    const searchPanel = document.getElementById("kf-sf-search-panel");
+    const mobileSearch = document.getElementById("kf-sf-search-mobile");
+    const openSearchBtn = root.querySelector(".kf-sf-search-open");
+    const closeSearchBtn = mobileSearch?.querySelector(".kf-sf-search-mobile__close");
+    const mobileSearchInput = document.getElementById("kf-sf-search-mobile-input");
+    const megaItems = root.querySelectorAll(".kf-sf-nav__item.has-mega");
+
+    let drawerOpen = false;
+    let deskSearchOpen = false;
+    let mobileSearchOpen = false;
+    let megaTimers = new WeakMap();
+
+    const lockBody = (on) => {
+      document.body.style.overflow = on ? "hidden" : "";
+    };
+
+    const setDrawer = (v) => {
+      if (!drawer || drawerOpen === v) return;
+      drawerOpen = v;
+      if (v) setMobileSearch(false);
+      drawer.classList.toggle("is-open", v);
+      overlay?.classList.toggle("is-open", v);
+      drawer.setAttribute("aria-hidden", String(!v));
+      overlay?.setAttribute("aria-hidden", String(!v));
+      openMenuBtn?.setAttribute("aria-expanded", String(v));
+      openMenuBtn?.setAttribute("aria-label", v ? "Close menu" : "Open menu");
+      lockBody(v || mobileSearchOpen);
+
+      if (!v) {
+        drawer.querySelectorAll(".pg-h-nav__item.is-active").forEach((item) => {
+          item.classList.remove("is-active");
+          item.querySelector(".pg-h-nav__parent")?.setAttribute("aria-expanded", "false");
+        });
+        openMenuBtn?.focus({ preventScroll: true });
+      }
+    };
+
+    const setDeskSearch = (v) => {
+      if (!searchWrap || deskSearchOpen === v) return;
+      deskSearchOpen = v;
+      searchWrap.classList.toggle("is-open", v);
+      searchPanel?.classList.toggle("is-open", v);
+      searchPanel?.setAttribute("aria-hidden", String(!v));
+      searchInput?.setAttribute("aria-expanded", String(v));
+    };
+
+    const setMobileSearch = (v) => {
+      if (!mobileSearch || mobileSearchOpen === v) return;
+      mobileSearchOpen = v;
+      if (v) setDrawer(false);
+      mobileSearch.classList.toggle("is-open", v);
+      mobileSearch.setAttribute("aria-hidden", String(!v));
+      openSearchBtn?.setAttribute("aria-expanded", String(v));
+      lockBody(v || drawerOpen);
+      if (v) {
+        window.setTimeout(() => mobileSearchInput?.focus({ preventScroll: true }), reduced ? 0 : 60);
+      } else {
+        openSearchBtn?.focus({ preventScroll: true });
+      }
+    };
+
+    const closeAllMegas = (except) => {
+      megaItems.forEach((item) => {
+        if (item === except) return;
+        item.classList.remove("is-open");
+        const trigger = item.querySelector(".kf-sf-nav__trigger");
+        const panel = item.querySelector(".kf-sf-mega");
+        trigger?.setAttribute("aria-expanded", "false");
+        panel?.setAttribute("aria-hidden", "true");
+        panel?.classList.remove("is-open");
+      });
+    };
+
+    const setMega = (item, open) => {
+      const trigger = item.querySelector(".kf-sf-nav__trigger");
+      const panel = item.querySelector(".kf-sf-mega");
+      if (!trigger || !panel) return;
+      if (open) closeAllMegas(item);
+      item.classList.toggle("is-open", open);
+      panel.classList.toggle("is-open", open);
+      trigger.setAttribute("aria-expanded", String(open));
+      panel.setAttribute("aria-hidden", String(!open));
+    };
+
+    openMenuBtn?.addEventListener("click", () => setDrawer(!drawerOpen));
+    closeMenuBtn?.addEventListener("click", () => setDrawer(false));
+    overlay?.addEventListener("click", () => setDrawer(false));
+
+    drawer?.querySelectorAll(".pg-h-nav__parent").forEach((parentBtn) => {
+      parentBtn.addEventListener("click", () => {
+        const item = parentBtn.closest(".pg-h-nav__item");
+        if (!item) return;
+        const willOpen = !item.classList.contains("is-active");
+        drawer.querySelectorAll(".pg-h-nav__item.is-active").forEach((openItem) => {
+          if (openItem !== item) {
+            openItem.classList.remove("is-active");
+            openItem.querySelector(".pg-h-nav__parent")?.setAttribute("aria-expanded", "false");
+          }
+        });
+        item.classList.toggle("is-active", willOpen);
+        parentBtn.setAttribute("aria-expanded", String(willOpen));
+      });
+    });
+
+    drawer?.querySelectorAll(".pg-h-nav__submenu a, .pg-h-nav__link, .pg-h-nav__popular-item").forEach((a) => {
+      a.addEventListener("click", () => setDrawer(false));
+    });
+
+    if (searchInput && searchWrap) {
+      const openDesk = () => setDeskSearch(true);
+      searchInput.addEventListener("focus", openDesk);
+      searchInput.addEventListener("input", openDesk);
+      document.addEventListener("pointerdown", (e) => {
+        if (!deskSearchOpen) return;
+        if (searchWrap.contains(e.target)) return;
+        setDeskSearch(false);
+      });
+    }
+
+    openSearchBtn?.addEventListener("click", () => setMobileSearch(true));
+    closeSearchBtn?.addEventListener("click", () => setMobileSearch(false));
+
+    megaItems.forEach((item) => {
+      const clearTimer = () => {
+        const t = megaTimers.get(item);
+        if (t) window.clearTimeout(t);
+      };
+
+      item.addEventListener("mouseenter", () => {
+        clearTimer();
+        setMega(item, true);
+      });
+
+      item.addEventListener("mouseleave", () => {
+        clearTimer();
+        megaTimers.set(
+          item,
+          window.setTimeout(() => setMega(item, false), reduced ? 0 : 160)
+        );
+      });
+
+      item.querySelector(".kf-sf-nav__trigger")?.addEventListener("click", (e) => {
+        e.preventDefault();
+        const open = !item.classList.contains("is-open");
+        setMega(item, open);
+      });
+
+      item.addEventListener("focusin", () => {
+        clearTimer();
+        setMega(item, true);
+      });
+
+      item.addEventListener("focusout", (e) => {
+        if (item.contains(e.relatedTarget)) return;
+        clearTimer();
+        megaTimers.set(
+          item,
+          window.setTimeout(() => setMega(item, false), reduced ? 0 : 120)
+        );
+      });
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Escape") return;
+      if (mobileSearchOpen) {
+        setMobileSearch(false);
+        return;
+      }
+      if (deskSearchOpen) {
+        setDeskSearch(false);
+        return;
+      }
+      if (drawerOpen) {
+        setDrawer(false);
+        return;
+      }
+      closeAllMegas();
+    });
+
+    document.addEventListener("pointerdown", (e) => {
+      if (!root.contains(e.target) && !e.target.closest?.(".kf-sf-mega")) {
+        closeAllMegas();
+      }
+    });
+  }
+
+  function formatCount(n) {
+    const num = Number(n) || 0;
+    if (num >= 1000000) return `${(num / 1000000).toFixed(1).replace(/\.0$/, "")}m`;
+    if (num >= 1000) return `${(num / 1000).toFixed(1).replace(/\.0$/, "")}k`;
+    return String(num);
+  }
+
+  function initHeroFeaturedCarousel() {
+    document.querySelectorAll(".kf-hero-featured").forEach((root) => {
+      const track = root.querySelector("[data-hero-track]");
+      const slides = root.querySelectorAll("[data-hero-slide]");
+      if (!track || slides.length < 2) return;
+
+      let idx = 0;
+      let timer = null;
+      const autoplay = root.dataset.autoplay === "1" && !reduced;
+      const ms = Math.max(2000, parseInt(root.dataset.autoplayMs || "6000", 10) || 6000);
+      const dots = root.querySelectorAll("[data-hero-dots] .kf-hero-carousel__dot");
+      const prev = root.querySelector(".kf-hero-carousel__prev");
+      const next = root.querySelector(".kf-hero-carousel__next");
+
+      const go = (i) => {
+        idx = ((i % slides.length) + slides.length) % slides.length;
+        track.style.transform = `translateX(-${idx * 100}%)`;
+        slides.forEach((slide, n) => {
+          slide.setAttribute("aria-hidden", String(n !== idx));
+        });
+        dots.forEach((dot, n) => {
+          const on = n === idx;
+          dot.classList.toggle("is-active", on);
+          dot.classList.toggle("bg-neutral-900", on);
+          dot.classList.toggle("bg-neutral-300", !on);
+          dot.setAttribute("aria-selected", String(on));
+        });
+      };
+
+      const stop = () => {
+        if (timer) {
+          window.clearInterval(timer);
+          timer = null;
+        }
+      };
+
+      const start = () => {
+        stop();
+        if (!autoplay) return;
+        timer = window.setInterval(() => go(idx + 1), ms);
+      };
+
+      prev?.addEventListener("click", () => {
+        go(idx - 1);
+        start();
+      });
+      next?.addEventListener("click", () => {
+        go(idx + 1);
+        start();
+      });
+      dots.forEach((dot) => {
+        dot.addEventListener("click", () => {
+          go(parseInt(dot.dataset.index || "0", 10));
+          start();
+        });
+      });
+
+      root.addEventListener("mouseenter", stop);
+      root.addEventListener("mouseleave", start);
+      root.addEventListener("focusin", stop);
+      root.addEventListener("focusout", (e) => {
+        if (!root.contains(e.relatedTarget)) start();
+      });
+
+      go(0);
+      start();
+    });
+  }
+
+  function initTrendingCarousel() {
+    document.querySelectorAll(".kf-trending").forEach((root) => {
+      const track = root.querySelector("[data-trending-track]");
+      const prev = root.querySelector(".kf-trending__prev");
+      const next = root.querySelector(".kf-trending__next");
+      if (!track) return;
+
+      const update = () => {
+        const overflow = track.scrollWidth > track.clientWidth + 4;
+        prev?.classList.toggle("kf-trending__nav--visible", overflow);
+        next?.classList.toggle("kf-trending__nav--visible", overflow);
+        if (!overflow) return;
+        const max = track.scrollWidth - track.clientWidth;
+        prev?.classList.toggle("is-disabled", track.scrollLeft <= 2);
+        next?.classList.toggle("is-disabled", track.scrollLeft >= max - 2);
+      };
+
+      prev?.addEventListener("click", () => {
+        track.scrollBy({ left: -Math.max(160, track.clientWidth * 0.6), behavior: reduced ? "auto" : "smooth" });
+      });
+      next?.addEventListener("click", () => {
+        track.scrollBy({ left: Math.max(160, track.clientWidth * 0.6), behavior: reduced ? "auto" : "smooth" });
+      });
+      track.addEventListener("scroll", update, { passive: true });
+      window.addEventListener("resize", update);
+      update();
+    });
+  }
+
+  function initPostsByCategorySwiper() {
+    if (typeof window.Swiper === "undefined") return;
+
+    document.querySelectorAll(".kf-posts-by-cat__swiper").forEach((slider) => {
+      if (slider.swiper) return;
+
+      new window.Swiper(slider, {
+        slidesPerView: 3.5,
+        spaceBetween: 24,
+        grabCursor: true,
+        allowTouchMove: true,
+        simulateTouch: true,
+        touchEventsTarget: "container",
+        preventClicks: true,
+        preventClicksPropagation: true,
+        watchOverflow: true,
+        keyboard: {
+          enabled: true,
+          onlyInViewport: true,
+        },
+        navigation: false,
+        pagination: false,
+      });
+    });
+  }
+
+  function initEngagement() {
+    const cfg = window.kratomFeed || {};
+
+    document.querySelectorAll(".kf-eng-like").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        if (btn.getAttribute("aria-pressed") === "true" || btn.disabled) return;
+        const postId = btn.dataset.postId;
+        if (!postId || !cfg.ajaxUrl) return;
+
+        btn.disabled = true;
+        try {
+          const body = new URLSearchParams({
+            action: "kratom_feed_like_post",
+            nonce: cfg.nonce || "",
+            post_id: postId,
+          });
+          const res = await fetch(cfg.ajaxUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
+            body,
+            credentials: "same-origin",
+          });
+          const json = await res.json();
+          if (!json?.success) throw new Error("like failed");
+
+          const countEl = btn.querySelector(".kf-eng-like__count");
+          const label = json.data?.label || formatCount(json.data?.count);
+          if (countEl) countEl.textContent = label;
+          btn.setAttribute("aria-pressed", "true");
+          const path = btn.querySelector("svg path");
+          if (path) path.setAttribute("fill", "#ef4444");
+        } catch {
+          btn.disabled = false;
+        }
+      });
+    });
+
+    document.querySelectorAll(".kf-eng-share").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const url = btn.dataset.shareUrl || location.href;
+        const title = btn.dataset.shareTitle || document.title;
+        try {
+          if (navigator.share) {
+            await navigator.share({ title, url });
+            return;
+          }
+        } catch {
+          /* fall through to copy */
+        }
+        try {
+          await navigator.clipboard.writeText(url);
+          const orig = btn.getAttribute("aria-label");
+          btn.setAttribute("aria-label", cfg.i18n?.copied || "Link copied");
+          window.setTimeout(() => btn.setAttribute("aria-label", orig || "Share"), 2000);
+        } catch { /* noop */ }
+      });
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
     initHeaderShadow();
-    initMobileNav();
-    initSearchModal();
-    initSearchRecommendedSwiper();
-    initFaq();
-    initReviewsCarousel();
+    initStorefrontHeader();
     initReadingProgress();
     initTOC();
     initCopyLink();
     initNewsletter();
     initArchiveFilter();
+    initHeroFeaturedCarousel();
+    initTrendingCarousel();
+    initPostsByCategorySwiper();
+    initEngagement();
   });
 })();
 

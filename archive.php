@@ -9,7 +9,7 @@ get_header();
 ?>
 <main id="main-content">
 	<section class="border-b border-pg-border bg-pg-gray-light py-14 md:py-20">
-		<div class="pg-container">
+		<div class="container">
 			<h1 class="text-3xl font-bold uppercase text-gray-900 md:text-5xl"><?php the_archive_title(); ?></h1>
 			<?php if ( get_the_archive_description() ) : ?>
 				<div class="mt-4 max-w-2xl text-sm text-gray-600"><?php the_archive_description(); ?></div>
@@ -17,7 +17,7 @@ get_header();
 		</div>
 	</section>
 
-	<div class="pg-container py-12">
+	<div class="container py-12">
 		<div id="article-grid" class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
 			<?php if ( have_posts() ) : ?>
 				<?php while ( have_posts() ) : the_post(); ?>
