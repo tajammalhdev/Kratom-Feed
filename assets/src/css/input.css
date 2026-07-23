@@ -338,9 +338,14 @@
   align-items: center;
 }
 
-.kf-header-storefront .custom-logo {
-  max-height: 2.25rem;
+.kf-header-storefront .custom-logo,
+.kf-header-storefront .kf-sf-logo .custom-logo {
+  display: block;
+  height: 2.25rem;
   width: auto;
+  max-height: 2.25rem;
+  max-width: 12.5rem;
+  object-fit: contain;
 }
 
 

@@ -182,6 +182,38 @@ function kratom_feed_get_cta_icon_html( $attachment_id, $svg_code = '', $class =
 }
 
 /**
+ * Custom logo HTML for the header (no wrapping link — parent already links home).
+ * Always outputs an <img>. SVG logos often lack size meta in WordPress, so we force
+ * width/height attributes and rely on CSS for display size.
+ *
+ * @param string $class CSS classes for the logo element.
+ * @return string
+ */
+function kratom_feed_get_custom_logo_html( $class = 'custom-logo h-9 w-auto max-h-9' ) {
+	$logo_id = (int) get_theme_mod( 'custom_logo' );
+	if ( ! $logo_id ) {
+		return '';
+	}
+
+	$url = wp_get_attachment_image_url( $logo_id, 'full' );
+	if ( ! $url ) {
+		return '';
+	}
+
+	$alt = get_post_meta( $logo_id, '_wp_attachment_image_alt', true );
+	if ( ! $alt ) {
+		$alt = get_bloginfo( 'name' );
+	}
+
+	return sprintf(
+		'<img src="%s" alt="%s" class="%s" width="180" height="36" decoding="async" />',
+		esc_url( $url ),
+		esc_attr( $alt ),
+		esc_attr( $class )
+	);
+}
+
+/**
  * Render page builder for current post.
  */
 function kratom_feed_render_page_builder( $post_id = null ) {

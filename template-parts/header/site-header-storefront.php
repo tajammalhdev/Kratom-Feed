@@ -116,10 +116,13 @@ $quick_links = array_slice( $nav_tree, 0, 3 );
 					</svg>
 				</button>
 
-				<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="kf-sf-logo " aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
-					<?php if ( has_custom_logo() ) : ?>
-						<?php the_custom_logo(); ?>
-					<?php else : ?>
+				<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="kf-sf-logo inline-flex max-w-[200px] items-center" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
+					<?php
+					$logo_html = kratom_feed_get_custom_logo_html( 'custom-logo h-9 w-auto max-h-9' );
+					if ( $logo_html ) :
+						echo $logo_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					else :
+						?>
 						<span class="flex h-8 w-8 shrink-0 items-center justify-center text-black" aria-hidden="true">
 							<svg class="h-7 w-7" viewBox="0 0 32 32" fill="currentColor">
 								<path d="M4 20c4-5 8-7.5 12-7.5S24 15 28 20c-4 1.5-8 2.2-12 2.2S8 21.5 4 20z" opacity="0.35"/>
