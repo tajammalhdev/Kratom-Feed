@@ -64,37 +64,14 @@ function kratom_feed_widgets_init() {
 	register_sidebar( array(
 		'name'          => esc_html__( 'Blog Sidebar', 'kratom-feed' ),
 		'id'            => 'sidebar-blog',
-		'description'   => esc_html__( 'Sidebar on archive and single posts.', 'kratom-feed' ),
-		'before_widget' => '<section id="%1$s" class="widget %2$s mb-8">',
+		'description'   => esc_html__( 'Managed under Appearance → Widgets. Add or remove Search, Recent Posts, Recent Comments, and other widgets.', 'kratom-feed' ),
+		'before_widget' => '<section id="%1$s" class="widget %2$s kf-sidebar-widget  bg-white p-5 my-4 ">',
 		'after_widget'  => '</section>',
-		'before_title'  => '<h3 class="text-xs font-bold uppercase tracking-[0.15em] text-pg-lime mb-4">',
-		'after_title'   => '</h3>',
+		'before_title'  => '<h2 class="mb-4 text-sm font-bold uppercase tracking-[0.14em] text-neutral-900">',
+		'after_title'   => '</h2>',
 	) );
 }
 add_action( 'widgets_init', 'kratom_feed_widgets_init' );
-
-/**
- * The blog sidebar renders its own thumbnail-based recent-post list.
- * Suppress the core text-only Recent Posts widget to avoid duplicates.
- *
- * @param array|false $instance Widget instance settings.
- * @param WP_Widget   $widget   Widget object.
- * @param array       $args     Sidebar arguments.
- * @return array|false
- */
-function kratom_feed_hide_core_recent_posts_widget( $instance, $widget, $args ) {
-	if (
-		! empty( $args['id'] )
-		&& 'sidebar-blog' === $args['id']
-		&& isset( $widget->id_base )
-		&& 'recent-posts' === $widget->id_base
-	) {
-		return false;
-	}
-
-	return $instance;
-}
-add_filter( 'widget_display_callback', 'kratom_feed_hide_core_recent_posts_widget', 10, 3 );
 
 /**
  * Enqueue scripts and styles.
@@ -240,6 +217,7 @@ add_action( 'after_setup_theme', 'kratom_feed_load_carbon_fields', 5 );
 
 require_once KRATOM_FEED_DIR . '/inc/template-functions.php';
 require_once KRATOM_FEED_DIR . '/inc/quiz.php';
+require_once KRATOM_FEED_DIR . '/inc/widgets.php';
 
 if ( file_exists( KRATOM_FEED_DIR . '/vendor/autoload.php' ) ) {
 	require_once KRATOM_FEED_DIR . '/inc/carbon-fields.php';

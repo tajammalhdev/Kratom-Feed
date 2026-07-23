@@ -10,6 +10,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Whether the blog sidebar should render.
+ *
+ * @return bool
+ */
+function kratom_feed_is_blog_sidebar_enabled() {
+	if ( ! function_exists( 'carbon_get_theme_option' ) ) {
+		return true;
+	}
+
+	$value = carbon_get_theme_option( 'blog_sidebar_enabled' );
+	if ( null === $value || '' === $value ) {
+		return true;
+	}
+
+	return (bool) $value;
+}
+
+/**
  * Get theme option with fallback.
  */
 function kratom_feed_get_option( $key, $default = '' ) {

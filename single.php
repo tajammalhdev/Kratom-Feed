@@ -112,7 +112,13 @@ if ( have_posts() ) :
 	</div>
 
 	<div class="container py-12">
-		<div class="grid gap-12 lg:grid-cols-[220px_1fr_300px]">
+		<?php
+		$sidebar_enabled = kratom_feed_is_blog_sidebar_enabled() && is_active_sidebar( 'sidebar-blog' );
+		$grid_class      = $sidebar_enabled
+			? 'grid gap-12 lg:grid-cols-[220px_1fr_300px]'
+			: 'grid gap-12 lg:grid-cols-[220px_minmax(0,1fr)]';
+		?>
+		<div class="<?php echo esc_attr( $grid_class ); ?>">
 			<aside class="hidden lg:block" aria-label="<?php esc_attr_e( 'Table of contents', 'kratom-feed' ); ?>">
 				<nav id="desktop-toc" class="sticky top-28 space-y-1">
 					<p class="mb-3 text-xs font-bold uppercase tracking-[0.15em] text-gray-500"><?php esc_html_e( 'On this page', 'kratom-feed' ); ?></p>
@@ -134,7 +140,9 @@ if ( have_posts() ) :
 				<?php endif; ?>
 			</article>
 
-			<?php get_sidebar(); ?>
+			<?php if ( $sidebar_enabled ) : ?>
+				<?php get_sidebar(); ?>
+			<?php endif; ?>
 		</div>
 	</div>
 </main>

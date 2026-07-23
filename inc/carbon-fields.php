@@ -98,6 +98,9 @@ function kratom_feed_setup_carbon_fields() {
 			Field::make( 'textarea', 'blog_archive_subtitle', __( 'Blog Archive Subtitle', 'kratom-feed' ) ),
 			Field::make( 'checkbox', 'show_reading_time', __( 'Show Reading Time', 'kratom-feed' ) )
 				->set_default_value( true ),
+			Field::make( 'checkbox', 'blog_sidebar_enabled', __( 'Enable Blog Sidebar', 'kratom-feed' ) )
+				->set_default_value( true )
+				->set_help_text( __( 'Show the right-hand sidebar on single posts. Manage widgets under Appearance → Widgets.', 'kratom-feed' ) ),
 		) )
 		->add_tab( __( 'Quiz', 'kratom-feed' ), array(
 			Field::make( 'separator', 'quiz_sep_copy', __( 'Presentation', 'kratom-feed' ) ),
