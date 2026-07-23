@@ -44,8 +44,8 @@
         a.href = `#${h.id}`;
         a.textContent = h.textContent;
         a.className = isH3
-          ? "block py-1 pl-4 text-xs text-gray-500 hover:text-pg-green-dark"
-          : "block py-1.5 text-sm font-medium text-gray-600 hover:text-pg-green-dark";
+          ? "block py-1 pl-4 text-xs text-gray-500 hover:text-pg-hover"
+          : "block py-1.5 text-sm font-medium text-gray-600 hover:text-pg-hover";
         a.addEventListener("click", (e) => {
           e.preventDefault();
           const t = document.getElementById(h.id);

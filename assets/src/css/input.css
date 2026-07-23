@@ -7,7 +7,8 @@
 
 @theme {
   --color-pg-lime: #b8f04a;
-  --color-pg-lime-hover: #a3e635;
+  --color-pg-lime-hover: #67860b;
+  --color-pg-hover: #67860b;
   --color-pg-green: #42b251;
   --color-pg-green-dark: #2c7736;
   --color-pg-green-light: #d3eed6;
@@ -56,11 +57,11 @@
   }
 
   .pg-nav-link {
-    @apply text-[11px] font-medium uppercase tracking-[0.12em] text-gray-600 transition-colors duration-200 hover:text-pg-green-dark cursor-pointer;
+    @apply text-[11px] font-medium uppercase tracking-[0.12em] text-gray-600 transition-colors duration-200 hover:text-pg-hover cursor-pointer;
   }
 
   .pg-btn-lime {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-pg-lime px-8 py-3 text-sm font-bold uppercase tracking-wide text-pg-dark transition-all duration-200 hover:bg-pg-lime-hover cursor-pointer;
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-pg-lime px-8 py-3 text-sm font-bold uppercase tracking-wide text-pg-dark transition-all duration-200 hover:bg-pg-hover hover:text-white cursor-pointer;
   }
 
   .pg-card {
@@ -68,7 +69,7 @@
   }
 
   .pg-prose {
-    @apply prose prose-lg max-w-none prose-headings:font-bold prose-headings:uppercase prose-headings:tracking-wide prose-a:text-pg-green-dark hover:prose-a:text-pg-green;
+    @apply prose prose-lg max-w-none prose-headings:font-bold prose-headings:uppercase prose-headings:tracking-wide prose-a:text-pg-green-dark hover:prose-a:text-pg-hover;
   }
 }
 
@@ -366,7 +367,9 @@
 }
 
 .kf-sf-cta--solid:hover {
-  opacity: 0.9;
+  border-color: var(--color-pg-hover);
+  background: var(--color-pg-hover);
+  opacity: 1;
 }
 
 .kf-sf-search__panel {
@@ -443,8 +446,9 @@
 
 .kf-sf-search__trending-list a:hover,
 .kf-sf-search__trending-list a:focus {
-  border-color: var(--kf-sf-green);
+  border-color: var(--color-pg-hover);
   background: #f4faf5;
+  color: var(--color-pg-hover);
 }
 
 .kf-sf-quick__link {
@@ -503,7 +507,7 @@
 .kf-sf-nav__trigger:hover,
 .kf-sf-nav__item.is-open > .kf-sf-nav__trigger,
 .kf-sf-nav__item:focus-within > .kf-sf-nav__trigger {
-  color: var(--kf-sf-green);
+  color: var(--color-pg-hover);
 }
 
 .kf-sf-nav__chevron {
@@ -573,7 +577,7 @@
 }
 
 .kf-sf-mega__links a:hover {
-  color: var(--kf-sf-green);
+  color: var(--color-pg-hover);
 }
 
 .kf-sf-mega__posts {
@@ -594,7 +598,7 @@
 }
 
 .kf-sf-mega__post:hover .kf-sf-mega__post-title {
-  color: var(--kf-sf-green);
+  color: var(--color-pg-hover);
 }
 
 .kf-sf-mega__thumb {
@@ -896,8 +900,8 @@
 
 .kf-cat-spotlight__read-more:hover,
 .kf-cat-spotlight__read-more:focus-visible {
-  border-color: var(--color-pg-green);
-  color: var(--color-pg-green);
+  border-color: var(--color-pg-hover);
+  color: var(--color-pg-hover);
 }
 
 .kf-cat-spotlight__list {
@@ -1107,9 +1111,9 @@
 
 .kf-posts-by-cat__save:hover,
 .kf-posts-by-cat__save:focus-visible {
-  border-color: var(--color-pg-green);
+  border-color: var(--color-pg-hover);
   background: #f4f8f5;
-  color: var(--color-pg-green);
+  color: var(--color-pg-hover);
 }
 
 @media (min-width: 640px) {

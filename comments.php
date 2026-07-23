@@ -69,7 +69,7 @@ $form_args = array(
 	'label_submit'         => __( 'Send message', 'kratom-feed' ),
 	'submit_button'        => '<button name="%1$s" type="submit" id="%2$s" class="%3$s">%4$s <span aria-hidden="true">→</span></button>',
 	'submit_field'         => '<p class="form-submit mt-6 mb-0">%1$s %2$s</p>',
-	'class_submit'         => 'inline-flex h-12 cursor-pointer items-center gap-2 rounded bg-pg-green px-6 text-sm font-semibold text-white transition-colors hover:bg-pg-green-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pg-green',
+	'class_submit'         => 'inline-flex h-12 cursor-pointer items-center gap-2 rounded bg-pg-green px-6 text-sm font-semibold text-white transition-colors hover:bg-pg-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pg-green',
 	'class_form'           => 'comment-form',
 	'comment_notes_before' => '',
 	'comment_notes_after'  => '',
@@ -77,7 +77,7 @@ $form_args = array(
 		'<p class="logged-in-as mb-4 rounded-xl border border-pg-border bg-pg-green-light/40 px-4 py-3 text-sm text-gray-600">%s</p>',
 		sprintf(
 			/* translators: 1: edit user link, 2: logout URL, 3: username */
-			__( 'Logged in as <a class="font-semibold text-pg-green-dark underline underline-offset-2 hover:text-pg-green" href="%1$s">%3$s</a>. <a class="underline underline-offset-2 hover:text-pg-green" href="%2$s">Log out?</a>', 'kratom-feed' ),
+			__( 'Logged in as <a class="font-semibold text-pg-green-dark underline underline-offset-2 hover:text-pg-hover" href="%1$s">%3$s</a>. <a class="underline underline-offset-2 hover:text-pg-hover" href="%2$s">Log out?</a>', 'kratom-feed' ),
 			esc_url( get_edit_user_link() ),
 			esc_url( wp_logout_url( apply_filters( 'the_permalink', get_permalink() ) ) ),
 			esc_html( wp_get_current_user()->display_name )
@@ -85,7 +85,7 @@ $form_args = array(
 	),
 	'must_log_in'          => '<p class="must-log-in text-sm text-gray-500">' . sprintf(
 		/* translators: %s: login URL */
-		__( 'You must be <a class="font-semibold text-pg-green-dark underline underline-offset-2 hover:text-pg-green" href="%s">logged in</a> to post a comment.', 'kratom-feed' ),
+		__( 'You must be <a class="font-semibold text-pg-green-dark underline underline-offset-2 hover:text-pg-hover" href="%s">logged in</a> to post a comment.', 'kratom-feed' ),
 		esc_url( wp_login_url( get_permalink() ) )
 	) . '</p>',
 );

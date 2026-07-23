@@ -98,7 +98,7 @@ if ( ! $json ) {
 							<?php $oid = $qid . '-opt-' . $option['key']; ?>
 							<button
 								type="button"
-								class="kf-quiz__opt group grid w-full grid-cols-[48px_1fr] items-center gap-x-3 rounded-[10px] border-2 border-neutral-200 bg-white px-5 py-4 text-left transition-colors hover:border-pg-green hover:bg-[#f9fcf6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pg-green"
+								class="kf-quiz__opt group grid w-full grid-cols-[48px_1fr] items-center gap-x-3 rounded-[10px] border-2 border-neutral-200 bg-white px-5 py-4 text-left transition-colors hover:border-pg-hover hover:bg-[#f9fcf6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pg-green"
 								role="radio"
 								aria-checked="false"
 								id="<?php echo esc_attr( $oid ); ?>"
@@ -117,7 +117,7 @@ if ( ! $json ) {
 					<div class="mt-8 flex flex-wrap items-center justify-between gap-3">
 						<button
 							type="button"
-							class="kf-quiz__nav-btn rounded-md border border-neutral-300 px-4 py-2.5 text-sm font-semibold text-neutral-600 transition-colors hover:border-pg-green hover:text-pg-green disabled:cursor-not-allowed disabled:opacity-40"
+							class="kf-quiz__nav-btn rounded-md border border-neutral-300 px-4 py-2.5 text-sm font-semibold text-neutral-600 transition-colors hover:border-pg-hover hover:text-pg-hover disabled:cursor-not-allowed disabled:opacity-40"
 							data-quiz-back
 							<?php echo $is_first ? 'disabled' : ''; ?>
 						>
@@ -125,7 +125,7 @@ if ( ! $json ) {
 						</button>
 						<button
 							type="button"
-							class="kf-quiz__nav-btn rounded-md bg-pg-green px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-pg-green-dark disabled:cursor-not-allowed disabled:opacity-40"
+							class="kf-quiz__nav-btn rounded-md bg-pg-green px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-pg-hover disabled:cursor-not-allowed disabled:opacity-40"
 							data-quiz-next
 							disabled
 						>
@@ -167,14 +167,14 @@ if ( ! $json ) {
 							class="w-full rounded-lg border-2 border-neutral-200 px-4 py-3.5 text-base outline-none transition-colors focus:border-pg-green"
 						/>
 					</div>
-					<button type="submit" class="w-full rounded-lg bg-pg-green px-8 py-4 text-base font-bold text-white transition-colors hover:bg-pg-green-dark" data-quiz-gate-submit>
+					<button type="submit" class="w-full rounded-lg bg-pg-green px-8 py-4 text-base font-bold text-white transition-colors hover:bg-pg-hover" data-quiz-gate-submit>
 						<?php echo esc_html( $config['gateBtn'] ); ?>
 					</button>
 					<?php if ( ! empty( $config['gateLegal'] ) ) : ?>
 					<p class="mt-3 mb-0 text-center text-xs leading-relaxed text-neutral-400">
 						<?php echo esc_html( $config['gateLegal'] ); ?>
 						<?php if ( $legal_url ) : ?>
-						<a class="underline hover:text-pg-green" href="<?php echo esc_url( $legal_url ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Privacy Policy', 'kratom-feed' ); ?></a>
+						<a class="underline hover:text-pg-hover" href="<?php echo esc_url( $legal_url ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Privacy Policy', 'kratom-feed' ); ?></a>
 						<?php endif; ?>
 					</p>
 					<?php endif; ?>
@@ -210,7 +210,7 @@ if ( ! $json ) {
 						<p class="mt-3 mb-0 hidden text-sm text-amber-700" data-quiz-primary-caution></p>
 					</div>
 					<div class="flex min-w-[140px] flex-col items-stretch gap-2 sm:items-center">
-						<a href="#" class="inline-block rounded-lg bg-pg-green px-6 py-3.5 text-center text-[15px] font-bold text-white transition-colors hover:bg-pg-green-dark" data-quiz-primary-cta>
+						<a href="#" class="inline-block rounded-lg bg-pg-green px-6 py-3.5 text-center text-[15px] font-bold text-white transition-colors hover:bg-pg-hover" data-quiz-primary-cta>
 							<?php echo esc_html( $config['ctaPrimary'] ); ?>
 						</a>
 						<span class="text-center text-[11px] leading-snug text-neutral-400"><?php echo esc_html( $config['recTrust'] ); ?></span>
@@ -226,7 +226,7 @@ if ( ! $json ) {
 						<span class="mt-1.5 inline-block rounded bg-[#f0f7e6] px-2.5 py-0.5 text-xs font-semibold text-pg-green" data-quiz-secondary-format></span>
 						<p class="mt-2 mb-0 text-[15px] leading-relaxed text-neutral-600" data-quiz-secondary-why></p>
 					</div>
-					<a href="#" class="inline-block rounded-lg border-2 border-pg-green px-5 py-3 text-center text-sm font-semibold text-pg-green transition-colors hover:bg-pg-green hover:text-white" data-quiz-secondary-cta>
+					<a href="#" class="inline-block rounded-lg border-2 border-pg-green px-5 py-3 text-center text-sm font-semibold text-pg-green transition-colors hover:bg-pg-hover hover:text-white" data-quiz-secondary-cta>
 						<?php echo esc_html( $config['ctaSecondary'] ); ?>
 					</a>
 				</div>
@@ -240,7 +240,7 @@ if ( ! $json ) {
 						<span class="mt-1.5 inline-block rounded bg-[#f0f7e6] px-2.5 py-0.5 text-xs font-semibold text-pg-green" data-quiz-bonus-format></span>
 						<p class="mt-2 mb-0 text-[15px] leading-relaxed text-neutral-600" data-quiz-bonus-why></p>
 					</div>
-					<a href="#" class="inline-block rounded-lg border-2 border-pg-green px-5 py-3 text-center text-sm font-semibold text-pg-green transition-colors hover:bg-pg-green hover:text-white" data-quiz-bonus-cta>
+					<a href="#" class="inline-block rounded-lg border-2 border-pg-green px-5 py-3 text-center text-sm font-semibold text-pg-green transition-colors hover:bg-pg-hover hover:text-white" data-quiz-bonus-cta>
 						<?php echo esc_html( $config['ctaSecondary'] ); ?>
 					</a>
 				</div>
@@ -257,7 +257,7 @@ if ( ! $json ) {
 			<?php endif; ?>
 
 			<div class="text-center">
-				<button type="button" class="border-0 bg-transparent text-sm text-neutral-400 underline hover:text-pg-green" data-quiz-retake>
+				<button type="button" class="border-0 bg-transparent text-sm text-neutral-400 underline hover:text-pg-hover" data-quiz-retake>
 					<?php echo esc_html( $config['retakeLabel'] ); ?>
 				</button>
 			</div>

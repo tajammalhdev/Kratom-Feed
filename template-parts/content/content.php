@@ -23,7 +23,7 @@
 			<?php endif; ?>
 		</div>
 		<div class="p-4">
-			<h3 class="line-clamp-2 text-sm font-semibold leading-snug text-gray-900 group-hover:text-pg-green-dark transition-colors"><?php the_title(); ?></h3>
+			<h3 class="line-clamp-2 text-sm font-semibold leading-snug text-gray-900 group-hover:text-pg-hover transition-colors"><?php the_title(); ?></h3>
 			<p class="mt-2 text-xs text-gray-500">
 				<?php
 				if ( kratom_feed_get_option( 'show_reading_time', true ) ) {

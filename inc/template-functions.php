@@ -21,7 +21,100 @@ function kratom_feed_get_option( $key, $default = '' ) {
 }
 
 /**
+ * Resolve a WordPress user ID from get_avatar() id_or_email input.
+ *
+ * @param mixed $id_or_email User ID, email, WP_User, WP_Post, or WP_Comment.
+ * @return int
+ */
+function kratom_feed_resolve_avatar_user_id( $id_or_email ) {
+	if ( is_numeric( $id_or_email ) ) {
+		return (int) $id_or_email;
+	}
+
+	if ( $id_or_email instanceof WP_User ) {
+		return (int) $id_or_email->ID;
+	}
+
+	if ( $id_or_email instanceof WP_Post ) {
+		return (int) $id_or_email->post_author;
+	}
+
+	if ( $id_or_email instanceof WP_Comment ) {
+		if ( ! empty( $id_or_email->user_id ) ) {
+			return (int) $id_or_email->user_id;
+		}
+		if ( ! empty( $id_or_email->comment_author_email ) ) {
+			$user = get_user_by( 'email', $id_or_email->comment_author_email );
+			return $user ? (int) $user->ID : 0;
+		}
+		return 0;
+	}
+
+	if ( is_string( $id_or_email ) && is_email( $id_or_email ) ) {
+		$user = get_user_by( 'email', $id_or_email );
+		return $user ? (int) $user->ID : 0;
+	}
+
+	return 0;
+}
+
+/**
+ * Custom profile photo URL for a user (Carbon Fields upload).
+ *
+ * @param int $user_id User ID.
+ * @param int $size    Requested square size in pixels.
+ * @return string
+ */
+function kratom_feed_get_user_avatar_url( $user_id, $size = 96 ) {
+	$user_id = (int) $user_id;
+	if ( ! $user_id || ! function_exists( 'carbon_get_user_meta' ) ) {
+		return '';
+	}
+
+	$attachment_id = (int) carbon_get_user_meta( $user_id, 'user_avatar' );
+	if ( ! $attachment_id ) {
+		return '';
+	}
+
+	$size = max( 1, (int) $size );
+	$url  = wp_get_attachment_image_url( $attachment_id, array( $size, $size ) );
+	if ( ! $url ) {
+		$url = wp_get_attachment_image_url( $attachment_id, 'thumbnail' );
+	}
+
+	return $url ? (string) $url : '';
+}
+
+/**
+ * Prefer the custom profile photo over Gravatar when set.
+ *
+ * @param array $args        Avatar args.
+ * @param mixed $id_or_email Avatar identifier.
+ * @return array
+ */
+function kratom_feed_pre_get_avatar_data( $args, $id_or_email ) {
+	$user_id = kratom_feed_resolve_avatar_user_id( $id_or_email );
+	if ( ! $user_id ) {
+		return $args;
+	}
+
+	$size = isset( $args['size'] ) ? (int) $args['size'] : 96;
+	$url  = kratom_feed_get_user_avatar_url( $user_id, $size );
+	if ( $url ) {
+		$args['url']          = $url;
+		$args['found_avatar'] = true;
+	}
+
+	return $args;
+}
+add_filter( 'pre_get_avatar_data', 'kratom_feed_pre_get_avatar_data', 10, 2 );
+
+/**
  * Get attachment image URL from Carbon image field.
+ *
+ * @param int    $image_id Attachment ID.
+ * @param string $size     Image size.
+ * @return string
  */
 function kratom_feed_image_url( $image_id, $size = 'large' ) {
 	if ( ! $image_id ) {
@@ -565,13 +658,13 @@ function kratom_feed_comment_callback( $comment, $args, $depth ) {
 				<header class="mb-2 flex flex-wrap items-baseline gap-x-2 gap-y-1">
 					<?php
 					printf(
-						'<cite class="not-italic text-sm font-bold text-gray-900 [&_a]:text-gray-900 [&_a]:no-underline hover:[&_a]:text-pg-green-dark">%s</cite>',
+						'<cite class="not-italic text-sm font-bold text-gray-900 [&_a]:text-gray-900 [&_a]:no-underline hover:[&_a]:text-pg-hover">%s</cite>',
 						get_comment_author_link( $comment )
 					);
 					?>
 					<a
 						href="<?php echo esc_url( get_comment_link( $comment, $args ) ); ?>"
-						class="text-xs font-medium uppercase tracking-wide text-gray-400 transition-colors hover:text-pg-green-dark"
+						class="text-xs font-medium uppercase tracking-wide text-gray-400 transition-colors hover:text-pg-hover"
 					>
 						<time datetime="<?php comment_time( 'c' ); ?>">
 							<?php echo esc_html( get_comment_date( '', $comment ) ); ?>
@@ -585,7 +678,7 @@ function kratom_feed_comment_callback( $comment, $args, $depth ) {
 				</p>
 				<?php endif; ?>
 
-				<div class="text-[15px] leading-relaxed text-gray-600 [&_a]:font-medium [&_a]:text-pg-green-dark [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-pg-green [&_p]:mb-3 [&_p:last-child]:mb-0">
+				<div class="text-[15px] leading-relaxed text-gray-600 [&_a]:font-medium [&_a]:text-pg-green-dark [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-pg-hover [&_p]:mb-3 [&_p:last-child]:mb-0">
 					<?php comment_text(); ?>
 				</div>
 
@@ -622,7 +715,7 @@ function kratom_feed_comment_reply_link_class( $link ) {
 	}
 	return preg_replace(
 		'/class=[\'"]([^\'"]*)[\'"]/',
-		'class="$1 text-xs font-bold uppercase tracking-[0.12em] text-pg-green-dark underline underline-offset-4 transition-colors hover:text-pg-green"',
+		'class="$1 text-xs font-bold uppercase tracking-[0.12em] text-pg-green-dark underline underline-offset-4 transition-colors hover:text-pg-hover"',
 		$link,
 		1
 	);

@@ -39,7 +39,7 @@ $about_url   = get_permalink( get_page_by_path( 'about' ) ) ?: home_url( '/about
 							$term = get_category_by_slug( $slug );
 							if ( $term ) {
 								printf(
-									'<li><a href="%s" class="text-sm text-gray-400 hover:text-pg-lime transition-colors">%s</a></li>',
+									'<li><a href="%s" class="text-sm text-gray-400 hover:text-pg-hover transition-colors">%s</a></li>',
 									esc_url( get_category_link( $term ) ),
 									esc_html( $term->name )
 								);
@@ -58,7 +58,7 @@ $about_url   = get_permalink( get_page_by_path( 'about' ) ) ?: home_url( '/about
 			<div>
 				<h3 class="text-xs font-bold uppercase tracking-[0.15em] text-pg-lime"><?php esc_html_e( 'Legal', 'kratom-feed' ); ?></h3>
 				<ul class="mt-4 space-y-2.5">
-					<li><a href="<?php echo esc_url( $about_url ); ?>" class="text-sm text-gray-400 hover:text-pg-lime transition-colors"><?php esc_html_e( 'Editorial Policy', 'kratom-feed' ); ?></a></li>
+					<li><a href="<?php echo esc_url( $about_url ); ?>" class="text-sm text-gray-400 hover:text-pg-hover transition-colors"><?php esc_html_e( 'Editorial Policy', 'kratom-feed' ); ?></a></li>
 				</ul>
 			</div>
 		</div>

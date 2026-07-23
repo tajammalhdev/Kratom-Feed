@@ -79,7 +79,7 @@ $button_href = $show_button ? $kf_resolve_url( $button_url ) : '';
 		<?php if ( $show_button && $button_text && $button_href ) : ?>
 		<a
 			href="<?php echo esc_url( $button_href ); ?>"
-			class="inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded bg-pg-green px-6 text-base text-white transition-colors hover:bg-pg-green-dark"
+			class="inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded bg-pg-green px-6 text-base text-white transition-colors hover:bg-pg-hover"
 		>
 			<?php echo esc_html( $button_text ); ?>
 			<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">

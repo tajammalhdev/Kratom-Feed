@@ -36,7 +36,7 @@ $recent_posts = get_posts(
 				<li class="border-b border-neutral-300 py-5 first:pt-0">
 					<a href="<?php echo esc_url( $permalink ); ?>" class="group flex items-center gap-4">
 						<div class="min-w-0 flex-1">
-							<h3 class="line-clamp-2 text-base font-semibold leading-tight text-neutral-900 transition-colors group-hover:text-pg-green-dark">
+							<h3 class="line-clamp-2 text-base font-semibold leading-tight text-neutral-900 transition-colors group-hover:text-pg-hover">
 								<?php echo esc_html( $post_title ); ?>
 							</h3>
 							<div class="mt-2 flex flex-wrap items-center gap-1 text-[11px] font-medium text-neutral-500">

@@ -405,5 +405,23 @@ function kratom_feed_setup_carbon_fields() {
 						->set_help_text( __( 'Link to a page using the Strain Quiz template or containing [kratom_quiz].', 'kratom-feed' ) ),
 				) ),
 		) );
+
+	// --- User profile -------------------------------------------------
+	Container::make( 'user_meta', __( 'Profile Photo', 'kratom-feed' ) )
+		->add_fields( array(
+			Field::make( 'image', 'user_avatar', __( 'Display Photo', 'kratom-feed' ) )
+				->set_value_type( 'id' )
+				->set_help_text( __( 'Upload a custom photo for this user. It replaces the default Gravatar on posts, comments, and author meta.', 'kratom-feed' ) ),
+		) );
 }
+
+/**
+ * Allow Profile Photo on user edit screens (not only for administrators).
+ *
+ * @return bool
+ */
+function kratom_feed_allow_user_meta_access() {
+	return false;
+}
+add_filter( 'carbon_fields_user_meta_container_admin_only_access', 'kratom_feed_allow_user_meta_access' );
 

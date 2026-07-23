@@ -34,7 +34,7 @@ if ( $button_url && '#' !== $button_url[0] && ! preg_match( '#^https?://#i', $bu
 			<?php if ( $button_text && $button_url ) : ?>
 			<a
 				href="<?php echo esc_url( $button_url ); ?>"
-				class="inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-md bg-[#41b955] px-7 text-base font-semibold text-white transition-colors hover:bg-pg-lime hover:text-neutral-900"
+				class="inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-md bg-[#41b955] px-7 text-base font-semibold text-white transition-colors hover:bg-pg-hover"
 			>
 				<?php echo esc_html( $button_text ); ?>
 				<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
